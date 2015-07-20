@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combinator.cs" />
     <Compile Include="MetaData\Hero.cs" />
     <Compile Include="MetaData\Item.cs" />
     <Compile Include="MetaData\ItemSlot.cs" />
