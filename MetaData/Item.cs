@@ -46,7 +46,7 @@ namespace Merchant_RPG_build.MetaData
 		{
 			var ignoreFields = new string[]
 			{
-				"StatFields", "Name", "Level", "Slot"
+				"StatFields", "Name", "Level", "Slot", "HP"
 			};
 			return typeof(Item).GetFields().Where(x => !ignoreFields.Contains(x.Name)).ToArray();
 		}

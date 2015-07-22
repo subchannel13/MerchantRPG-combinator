@@ -18,12 +18,12 @@ namespace Merchant_RPG_build
 
 		public void MakeCombinations()
 		{
-			this.AllItems = Library.Armorsmith.
+			this.AllItems = removeRedundantItems(
+				Library.Armorsmith.
 				Concat(Library.Blacksmith).
 				Concat(Library.Clothworker).
 				Concat(Library.Trinkets).
-				Concat(Library.Woodworker).Where(x => x.Level > 20).
-				GroupBy(x => x.Slot).ToDictionary(x => x.Key, x => x.ToArray());
+				Concat(Library.Woodworker));
 			this.Slots = AllItems.Keys.ToArray();
 			this.Combinations = new List<int[]>();
 
@@ -50,6 +50,36 @@ namespace Merchant_RPG_build
 				if (moreCombinations)
 					Combinations.Add(combination);
 			}
+		}
+
+		private Dictionary<ItemSlot, Item[]> removeRedundantItems(IEnumerable<Item> items)
+		{
+			var itemGroups = items.GroupBy(x => x.Slot);
+			var filteredItems = new Dictionary<ItemSlot, Item[]>();
+
+			foreach (var itemGroup in itemGroups)
+			{
+				var filteredList = new List<Item>();
+				foreach (var item in itemGroup)
+				{
+					bool redundant = false;
+					var superiorTo = new HashSet<Item>();
+					foreach (var filteredItem in filteredList)
+					{
+						if (Item.StatFields.All(x => (double)x.GetValue(item) > (double)x.GetValue(filteredItem)))
+							superiorTo.Add(filteredItem);
+						redundant |= Item.StatFields.All(x => (double)x.GetValue(item) <= (double)x.GetValue(filteredItem));
+					}
+					foreach (var toRemove in superiorTo)
+						filteredList.Remove(toRemove);
+					if (!redundant)
+						filteredList.Add(item);
+				}
+
+				filteredItems.Add(itemGroup.Key, filteredList.ToArray());
+			}
+
+			return filteredItems;
 		}
 
 		public void AnalyzeHero(Hero hero)
