@@ -22,7 +22,7 @@ namespace Merchant_RPG_build
 				Concat(Library.Blacksmith).
 				Concat(Library.Clothworker).
 				Concat(Library.Trinkets).
-				Concat(Library.Woodworker).
+				Concat(Library.Woodworker).Where(x => x.Level > 20).
 				GroupBy(x => x.Slot).ToDictionary(x => x.Key, x => x.ToArray());
 			this.Slots = AllItems.Keys.ToArray();
 			this.Combinations = new List<int[]>();
