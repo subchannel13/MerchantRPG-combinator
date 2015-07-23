@@ -53,6 +53,7 @@
     <Compile Include="MetaData\Item.cs" />
     <Compile Include="MetaData\ItemSlot.cs" />
     <Compile Include="MetaData\Library.cs" />
+    <Compile Include="MetaData\Monster.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

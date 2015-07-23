@@ -12,7 +12,7 @@ namespace Merchant_RPG_build
 			var combinator = new Combinator();
 			combinator.MakeCombinations();
 			foreach(var hero in Library.Heroes)
-				combinator.AnalyzeHero(hero);
+				combinator.AnalyzeHero(hero, Library.Monsters.Where(x => x.Name == "Ares Prime").First());
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);

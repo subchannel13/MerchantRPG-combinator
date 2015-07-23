@@ -9,7 +9,6 @@ namespace Merchant_RPG_build
 	class Combinator
 	{
 		private const double HeroLevel = 40;
-		private const double MaxEvasion = 90;
 		private const int MaxBuilds = 10;
 
 		private Dictionary<ItemSlot, Item[]> AllItems;
@@ -82,7 +81,7 @@ namespace Merchant_RPG_build
 			return filteredItems;
 		}
 
-		public void AnalyzeHero(Hero hero)
+		public void AnalyzeHero(Hero hero, Monster monster)
 		{
 			var buildScore = new Dictionary<int, double>();
 
@@ -118,11 +117,11 @@ namespace Merchant_RPG_build
 				}
 
 				accuracy += dexterity * hero.Dexterity;
-				double hitRate = Math.Min(1, accuracy / 100.0 + 0.8 / (1 + 2 * MaxEvasion));
+				double hitRate = Math.Min(1, accuracy / 100.0 + 0.8 / (1 + 2 * monster.Evasion));
 				criticalRate = Math.Min(criticalRate / 100.0, 1);
 
-				double normalDamage = attak + strength * hero.Strength;
-				double magicDamage = magicAttak + intelligence * hero.Intelligence;
+				double normalDamage = (attak + strength * hero.Strength) / (1 + monster.Defense / 100.0);
+				double magicDamage = (magicAttak + intelligence * hero.Intelligence) / (1 + monster.MagicDefense / 100.0);
 				buildScore.Add(i, (normalDamage + magicDamage) * hitRate * (1 + criticalRate));
 			}
 
