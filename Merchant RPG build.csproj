@@ -49,11 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Combinator.cs" />
+    <Compile Include="EquipmentBuild.cs" />
     <Compile Include="MetaData\Hero.cs" />
     <Compile Include="MetaData\Item.cs" />
     <Compile Include="MetaData\ItemSlot.cs" />
     <Compile Include="MetaData\Library.cs" />
     <Compile Include="MetaData\Monster.cs" />
+    <Compile Include="Processing\Stats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

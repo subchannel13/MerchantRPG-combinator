@@ -3,26 +3,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Merchant_RPG_build.MetaData;
+using Merchant_RPG_build.Processing;
 
 namespace Merchant_RPG_build
 {
 	class Combinator
 	{
-		private const double HeroLevel = 40;
-		private const int MaxBuilds = 10;
+		private const int MaxBuilds = 1;
 
-		private Dictionary<ItemSlot, Item[]> AllItems;
+		private Dictionary<ItemSlot, Stats[]> AllItems;
 		private ItemSlot[] Slots;
 		private List<int[]> Combinations;
 
-		public void MakeCombinations()
+		public void AnalyzeHero(Hero hero, int heroLevel, Monster monster)
+		{
+			initItems(hero, heroLevel, monster);
+			var buildScore = new Dictionary<int, double>();
+
+			var heroStats = new Stats(hero, heroLevel, monster);
+
+			for (int i = 0; i < Combinations.Count; i++)
+			{
+				var totalStats = new Stats(heroStats);
+
+				for (int slot = 0; slot < Slots.Length; slot++)
+					totalStats += AllItems[Slots[slot]][Combinations[i][slot]];
+
+				double hitRate = Math.Min(1, totalStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion));
+				double criticalRate = Math.Min(totalStats.CriticalRate, 1);
+
+				buildScore.Add(i, totalStats.Damage * hitRate * (1 + criticalRate));
+			}
+
+			var buildRanks = new List<int>(buildScore.Keys);
+			buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
+
+			Console.WriteLine(hero.Name + ":");
+			for (int i = 0; i < MaxBuilds && i < buildRanks.Count; i++)
+			{
+				var build = Combinations[buildRanks[i]];
+				for (int slot = 0; slot < Slots.Length; slot++) {
+					var item = AllItems[Slots[slot]][build[slot]].OriginalItem;
+					Console.Write(item.Name + ", ");
+				}
+				Console.WriteLine("score: " + buildScore[buildRanks[i]].ToString("0.0"));
+			}
+
+			Console.WriteLine();
+		}
+
+		private void initItems(Hero hero, int maxItemLevel, Monster monster)
 		{
 			this.AllItems = removeRedundantItems(
 				Library.Armorsmith.
 				Concat(Library.Blacksmith).
 				Concat(Library.Clothworker).
 				Concat(Library.Trinkets).
-				Concat(Library.Woodworker));
+				Concat(Library.Woodworker).Where(x => x.Level <= maxItemLevel),
+				hero, monster);
 			this.Slots = AllItems.Keys.ToArray();
 			this.Combinations = new List<int[]>();
 
@@ -51,23 +89,23 @@ namespace Merchant_RPG_build
 			}
 		}
 
-		private Dictionary<ItemSlot, Item[]> removeRedundantItems(IEnumerable<Item> items)
+		private Dictionary<ItemSlot, Stats[]> removeRedundantItems(IEnumerable<Item> items, Hero hero, Monster monster)
 		{
-			var itemGroups = items.GroupBy(x => x.Slot);
-			var filteredItems = new Dictionary<ItemSlot, Item[]>();
+			var itemGroups = items.Select(x => new Stats(x, hero, monster)).GroupBy(x => x.OriginalItem.Slot);
+			var filteredItems = new Dictionary<ItemSlot, Stats[]>();
 
 			foreach (var itemGroup in itemGroups)
 			{
-				var filteredList = new List<Item>();
+				var filteredList = new List<Stats>();
 				foreach (var item in itemGroup)
 				{
 					bool redundant = false;
-					var superiorTo = new HashSet<Item>();
+					var superiorTo = new HashSet<Stats>();
 					foreach (var filteredItem in filteredList)
 					{
-						if (Item.StatFields.All(x => (double)x.GetValue(item) > (double)x.GetValue(filteredItem)))
+						if (Stats.Fields.All(x => (double)x.GetValue(item) >= (double)x.GetValue(filteredItem)))
 							superiorTo.Add(filteredItem);
-						redundant |= Item.StatFields.All(x => (double)x.GetValue(item) <= (double)x.GetValue(filteredItem));
+						redundant |= Stats.Fields.All(x => (double)x.GetValue(item) <= (double)x.GetValue(filteredItem));
 					}
 					foreach (var toRemove in superiorTo)
 						filteredList.Remove(toRemove);
@@ -79,65 +117,6 @@ namespace Merchant_RPG_build
 			}
 
 			return filteredItems;
-		}
-
-		public void AnalyzeHero(Hero hero, Monster monster)
-		{
-			var buildScore = new Dictionary<int, double>();
-
-			for (int i = 0; i < Combinations.Count; i++)
-			{
-				double attak = hero.StartAttak + HeroLevel * hero.LevelAttak;
-				double magicAttak = hero.StartMagicAttak + HeroLevel * hero.LevelMagicAttak;
-				double accuracy = hero.StartAccuracy + HeroLevel * hero.LevelAccuracy;
-				double criticalRate = hero.StartCriticalRate + HeroLevel * hero.LevelCriticalRate;
-
-				double defense = hero.StartDefense + HeroLevel * hero.LevelDefense;
-				double magicDefense = hero.StartMagicDefense + HeroLevel * hero.LevelMagicDefense;
-
-				double strength = 0;
-				double intelligence = 0;
-				double dexterity = 0;
-
-				for (int slot = 0; slot < Slots.Length; slot++)
-				{
-					var item = AllItems[Slots[slot]][Combinations[i][slot]];
-
-					attak += item.Attak;
-					magicAttak += item.MagicAttak;
-					accuracy += item.Accuracy;
-					criticalRate += item.CriticalRate;
-
-					defense += item.Defense;
-					magicDefense += item.MagicDefense;
-
-					strength += item.Strength;
-					intelligence += item.Intelligence;
-					dexterity += item.Dexterity;
-				}
-
-				accuracy += dexterity * hero.Dexterity;
-				double hitRate = Math.Min(1, accuracy / 100.0 + 0.8 / (1 + 2 * monster.Evasion));
-				criticalRate = Math.Min(criticalRate / 100.0, 1);
-
-				double normalDamage = (attak + strength * hero.Strength) / (1 + monster.Defense / 100.0);
-				double magicDamage = (magicAttak + intelligence * hero.Intelligence) / (1 + monster.MagicDefense / 100.0);
-				buildScore.Add(i, (normalDamage + magicDamage) * hitRate * (1 + criticalRate));
-			}
-
-			var buildRanks = new List<int>(buildScore.Keys);
-			buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
-
-			Console.WriteLine(hero.Name + ":");
-			for (int i = 0; i < MaxBuilds && i < buildRanks.Count; i++)
-			{
-				var build = Combinations[buildRanks[i]];
-				for (int slot = 0; slot < Slots.Length; slot++)
-					Console.Write(AllItems[Slots[slot]][build[slot]].Name + ", ");
-				Console.WriteLine("score: " + buildScore[buildRanks[i]]);
-			}
-
-			Console.WriteLine();
 		}
 	}
 }

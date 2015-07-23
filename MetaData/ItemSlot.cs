@@ -9,6 +9,7 @@ namespace Merchant_RPG_build.MetaData
 		Chest,
 		Gloves,
 		Boots,
-		Trinket
+		Trinket,
+		N
 	}
 }
