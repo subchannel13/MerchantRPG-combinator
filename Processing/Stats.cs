@@ -50,8 +50,8 @@ namespace Merchant_RPG_build.Processing
 
 			this.Accuracy = (item.Accuracy + item.Dexterity * forHero.Dexterity) / 100.0;
 			this.CriticalRate = item.CriticalRate / 100.0;
-			this.Defense = item.Defense;
-			this.MagicDefense = item.MagicDefense;
+			this.Defense = item.Defense / 100.0;
+			this.MagicDefense = item.MagicDefense / 100.0;
 		}
 
 		public Stats(Hero hero, int heroLevel, Monster vsMonster)
@@ -64,8 +64,8 @@ namespace Merchant_RPG_build.Processing
 
 			this.Accuracy = (hero.StartAccuracy + hero.LevelAccuracy * heroLevel) / 100.0;
 			this.CriticalRate = (hero.StartCriticalRate + hero.LevelCriticalRate * heroLevel) / 100.0;
-			this.Defense = hero.StartDefense + hero.LevelDefense * heroLevel;
-			this.MagicDefense = hero.StartMagicDefense + hero.LevelMagicDefense * heroLevel;
+			this.Defense = (hero.StartDefense + hero.LevelDefense * heroLevel) / 100.0;
+			this.MagicDefense = (hero.StartMagicDefense + hero.LevelMagicDefense * heroLevel) / 100.0;
 		}
 
 		private Stats(Item originalItem, double attack, double accuracy, double criticalRate, double defense, double magicDefense)

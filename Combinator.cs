@@ -14,9 +14,12 @@ namespace Merchant_RPG_build
 		private Dictionary<ItemSlot, Stats[]> AllItems;
 		private ItemSlot[] Slots;
 		private List<int[]> Combinations;
+		private static List<BattleScenario> battleTurns = new List<BattleScenario>();
 
 		public void AnalyzeHero(Hero hero, int heroLevel, Monster monster)
 		{
+			calcBattleLength(20, 0);
+
 			initItems(hero, heroLevel, monster);
 			var buildScore = new Dictionary<int, double>();
 
@@ -31,12 +34,17 @@ namespace Merchant_RPG_build
 
 				double hitRate = Math.Min(1, totalStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion));
 				double criticalRate = Math.Min(totalStats.CriticalRate, 1);
+				double avgBattleLength = calcBattleLength((int)Math.Ceiling(monster.HP / totalStats.Damage), criticalRate) / hitRate;
 
-				buildScore.Add(i, totalStats.Damage * hitRate * (1 + criticalRate));
+				//buildScore.Add(i, totalStats.Damage * hitRate * (1 + criticalRate));
+				buildScore.Add(i,
+					(monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense)) * avgBattleLength
+				);
 			}
 
 			var buildRanks = new List<int>(buildScore.Keys);
-			buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
+			//buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
+			buildRanks.Sort((a, b) => buildScore[a].CompareTo(buildScore[b]));
 
 			Console.WriteLine(hero.Name + ":");
 			for (int i = 0; i < MaxBuilds && i < buildRanks.Count; i++)
@@ -118,5 +126,22 @@ namespace Merchant_RPG_build
 
 			return filteredItems;
 		}
+
+		private double calcBattleLength(int monsterHits, double criticalRate)
+		{
+			while (battleTurns.Count <= monsterHits)
+			{
+				if (battleTurns.Count == 0)
+				{
+					battleTurns.Add(null);
+					continue;
+				}
+
+				battleTurns.Add(new BattleScenario(battleTurns.Count));
+			}
+
+			return battleTurns[monsterHits].AverageTurns(criticalRate);
+		}
+
 	}
 }
