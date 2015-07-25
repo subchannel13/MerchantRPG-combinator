@@ -13,51 +13,40 @@ namespace Merchant_RPG_build
 
 		private Dictionary<ItemSlot, Stats[]> AllItems;
 		private ItemSlot[] Slots;
-		private List<int[]> Combinations;
+		private List<EquipmentBuild> BuildCombinations;
 		private static List<BattleScenario> battleTurns = new List<BattleScenario>();
 
-		public void AnalyzeHero(Hero hero, int heroLevel, Monster monster)
+		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster)
 		{
 			calcBattleLength(20, 0);
 
 			initItems(hero, heroLevel, monster);
-			var buildScore = new Dictionary<int, double>();
 
 			var heroStats = new Stats(hero, heroLevel, monster);
 
-			for (int i = 0; i < Combinations.Count; i++)
+			for (int i = 0; i < BuildCombinations.Count; i++)
 			{
 				var totalStats = new Stats(heroStats);
 
 				for (int slot = 0; slot < Slots.Length; slot++)
-					totalStats += AllItems[Slots[slot]][Combinations[i][slot]];
+				{
+					BuildCombinations[i].Items[slot] = AllItems[Slots[slot]][BuildCombinations[i].Combination[slot]].OriginalItem;
+					totalStats += AllItems[Slots[slot]][BuildCombinations[i].Combination[slot]];
+				}
 
 				double hitRate = Math.Min(1, totalStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion));
 				double criticalRate = Math.Min(totalStats.CriticalRate, 1);
 				double avgBattleLength = calcBattleLength((int)Math.Ceiling(monster.HP / totalStats.Damage), criticalRate) / hitRate;
 
+				BuildCombinations[i].TotalStats = totalStats;
+				BuildCombinations[i].Score =(monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense)) * avgBattleLength;
 				//buildScore.Add(i, totalStats.Damage * hitRate * (1 + criticalRate));
-				buildScore.Add(i,
-					(monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense)) * avgBattleLength
-				);
 			}
 
-			var buildRanks = new List<int>(buildScore.Keys);
 			//buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
-			buildRanks.Sort((a, b) => buildScore[a].CompareTo(buildScore[b]));
+			BuildCombinations.Sort((a, b) => a.Score.CompareTo(b.Score));
 
-			Console.WriteLine(hero.Name + ":");
-			for (int i = 0; i < MaxBuilds && i < buildRanks.Count; i++)
-			{
-				var build = Combinations[buildRanks[i]];
-				for (int slot = 0; slot < Slots.Length; slot++) {
-					var item = AllItems[Slots[slot]][build[slot]].OriginalItem;
-					Console.Write(item.Name + ", ");
-				}
-				Console.WriteLine("score: " + buildScore[buildRanks[i]].ToString("0.0"));
-			}
-
-			Console.WriteLine();
+			return BuildCombinations.Take(MaxBuilds).ToArray();
 		}
 
 		private void initItems(Hero hero, int maxItemLevel, Monster monster)
@@ -69,31 +58,31 @@ namespace Merchant_RPG_build
 				Concat(Library.Trinkets).
 				Concat(Library.Woodworker).Where(x => x.Level <= maxItemLevel),
 				hero, monster);
-			this.Slots = AllItems.Keys.ToArray();
-			this.Combinations = new List<int[]>();
+			this.Slots = AllItems.Keys.OrderBy(x => (int)x).ToArray();
+			this.BuildCombinations = new List<EquipmentBuild>();
 
-			Combinations.Add(new int[Slots.Length]);
+			BuildCombinations.Add(new EquipmentBuild(new int[Slots.Length]));
 			bool moreCombinations = true;
 
 			while (moreCombinations)
 			{
-				var combination = new int[Slots.Length];
+				var build = new EquipmentBuild(new int[Slots.Length]);
 				for (int i = 0; i < Slots.Length; i++)
-					combination[i] = Combinations[Combinations.Count - 1][i];
+					build.Combination[i] = BuildCombinations[BuildCombinations.Count - 1].Combination[i];
 
-				combination[0]++;
+				build.Combination[0]++;
 				for (int i = 0; i < Slots.Length; i++)
-					if (combination[i] >= AllItems[Slots[i]].Length)
+					if (build.Combination[i] >= AllItems[Slots[i]].Length)
 						if (i + 1 < Slots.Length)
 						{
-							combination[i] = 0;
-							combination[i + 1]++;
+							build.Combination[i] = 0;
+							build.Combination[i + 1]++;
 						}
 						else
 							moreCombinations = false;
 
 				if (moreCombinations)
-					Combinations.Add(combination);
+					BuildCombinations.Add(build);
 			}
 		}
 

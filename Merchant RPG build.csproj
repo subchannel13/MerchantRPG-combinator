@@ -56,6 +56,7 @@
     <Compile Include="MetaData\Monster.cs" />
     <Compile Include="Processing\BattleScenario.cs" />
     <Compile Include="Processing\CritBinome.cs" />
+    <Compile Include="Processing\EquipmentBuild.cs" />
     <Compile Include="Processing\Stats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
