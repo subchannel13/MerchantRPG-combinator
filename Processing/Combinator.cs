@@ -5,7 +5,7 @@ using System.Text;
 using Merchant_RPG_build.MetaData;
 using Merchant_RPG_build.Processing;
 
-namespace Merchant_RPG_build
+namespace Merchant_RPG_build.Processing
 {
 	class Combinator
 	{
@@ -16,11 +16,9 @@ namespace Merchant_RPG_build
 		private List<EquipmentBuild> BuildCombinations;
 		private static List<BattleScenario> battleTurns = new List<BattleScenario>();
 
-		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster)
+		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster, BuildPurpose buildFor)
 		{
-			calcBattleLength(20, 0);
-
-			initItems(hero, heroLevel, monster);
+			initItems(hero, heroLevel, monster, buildFor);
 
 			var heroStats = new Stats(hero, heroLevel, monster);
 
@@ -39,17 +37,32 @@ namespace Merchant_RPG_build
 				double avgBattleLength = calcBattleLength((int)Math.Ceiling(monster.HP / totalStats.Damage), criticalRate) / hitRate;
 
 				BuildCombinations[i].TotalStats = totalStats;
-				BuildCombinations[i].Score =(monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense)) * avgBattleLength;
-				//buildScore.Add(i, totalStats.Damage * hitRate * (1 + criticalRate));
+				switch (buildFor)
+				{
+					case BuildPurpose.MaxDefense:
+						BuildCombinations[i].Score = monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense);
+						break;
+					case BuildPurpose.MaxEffectiveHp:
+						BuildCombinations[i].Score = totalStats.Hp / (monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense));
+						break;
+					case BuildPurpose.MinHpLoss:
+						BuildCombinations[i].Score = (monster.Attack / (1 + totalStats.Defense) + monster.MagicAttack / (1 + totalStats.MagicDefense)) * avgBattleLength;
+						break;
+					case BuildPurpose.MinTurns:
+						BuildCombinations[i].Score = avgBattleLength;
+						break;
+				}
 			}
 
-			//buildRanks.Sort((a, b) => buildScore[b].CompareTo(buildScore[a]));
-			BuildCombinations.Sort((a, b) => a.Score.CompareTo(b.Score));
+			if (buildFor == BuildPurpose.MaxEffectiveHp)
+				BuildCombinations.Sort((a, b) => b.Score.CompareTo(a.Score)); //descending sort
+			else
+				BuildCombinations.Sort((a, b) => a.Score.CompareTo(b.Score));
 
 			return BuildCombinations.Take(MaxBuilds).ToArray();
 		}
 
-		private void initItems(Hero hero, int maxItemLevel, Monster monster)
+		private void initItems(Hero hero, int maxItemLevel, Monster monster, BuildPurpose buildFor)
 		{
 			this.AllItems = removeRedundantItems(
 				Library.Armorsmith.
@@ -57,7 +70,7 @@ namespace Merchant_RPG_build
 				Concat(Library.Clothworker).
 				Concat(Library.Trinkets).
 				Concat(Library.Woodworker).Where(x => x.Level <= maxItemLevel),
-				hero, monster);
+				hero, monster, buildFor);
 			this.Slots = AllItems.Keys.OrderBy(x => (int)x).ToArray();
 			this.BuildCombinations = new List<EquipmentBuild>();
 
@@ -86,10 +99,27 @@ namespace Merchant_RPG_build
 			}
 		}
 
-		private Dictionary<ItemSlot, Stats[]> removeRedundantItems(IEnumerable<Item> items, Hero hero, Monster monster)
+		private Dictionary<ItemSlot, Stats[]> removeRedundantItems(IEnumerable<Item> items, Hero hero, Monster monster, BuildPurpose buildFor)
 		{
 			var itemGroups = items.Select(x => new Stats(x, hero, monster)).GroupBy(x => x.OriginalItem.Slot);
 			var filteredItems = new Dictionary<ItemSlot, Stats[]>();
+
+			StatsFilter statsMask = (StatsFilter)0;
+			switch (buildFor)
+			{
+				case BuildPurpose.MaxDefense:
+					statsMask = StatsFilter.Defenses;
+					break;
+				case BuildPurpose.MaxEffectiveHp:
+					statsMask = StatsFilter.Defenses | StatsFilter.Hp;
+					break;
+				case BuildPurpose.MinHpLoss:
+					statsMask = StatsFilter.Defenses | StatsFilter.Offensive;
+					break;
+				case BuildPurpose.MinTurns:
+					statsMask = StatsFilter.Offensive;
+					break;
+			}
 
 			foreach (var itemGroup in itemGroups)
 			{
@@ -100,14 +130,20 @@ namespace Merchant_RPG_build
 					var superiorTo = new HashSet<Stats>();
 					foreach (var filteredItem in filteredList)
 					{
-						if (Stats.Fields.All(x => (double)x.GetValue(item) >= (double)x.GetValue(filteredItem)))
+						if (item.isSuperiorTo(filteredItem, statsMask))
 							superiorTo.Add(filteredItem);
-						redundant |= Stats.Fields.All(x => (double)x.GetValue(item) <= (double)x.GetValue(filteredItem));
+						redundant |= item.isInferiorTo(filteredItem, statsMask);
 					}
 					foreach (var toRemove in superiorTo)
 						filteredList.Remove(toRemove);
 					if (!redundant)
 						filteredList.Add(item);
+				}
+
+				if (filteredList.Count == 0)
+				{
+					var maxDamage = itemGroup.Max(x => x.Damage);
+					filteredList.Add(itemGroup.First(x => x.Damage == maxDamage));
 				}
 
 				filteredItems.Add(itemGroup.Key, filteredList.ToArray());

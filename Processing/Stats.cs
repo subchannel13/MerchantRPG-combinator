@@ -17,6 +17,7 @@ namespace Merchant_RPG_build.Processing
 
 		public double Defense;
 		public double MagicDefense;
+		public double Hp;
 
 		public Stats()
 		{
@@ -27,6 +28,7 @@ namespace Merchant_RPG_build.Processing
 			this.CriticalRate = 0;
 			this.Defense = 0;
 			this.MagicDefense = 0;
+			this.Hp = 0;
 		}
 
 		public Stats(Stats original)
@@ -38,6 +40,7 @@ namespace Merchant_RPG_build.Processing
 			this.CriticalRate = original.CriticalRate;
 			this.Defense = original.Defense;
 			this.MagicDefense = original.MagicDefense;
+			this.Hp = original.Hp;
 		}
 
 		public Stats(Item item, Hero forHero, Monster vsMonster)
@@ -52,6 +55,7 @@ namespace Merchant_RPG_build.Processing
 			this.CriticalRate = item.CriticalRate / 100.0;
 			this.Defense = item.Defense / 100.0;
 			this.MagicDefense = item.MagicDefense / 100.0;
+			this.Hp = item.HP;
 		}
 
 		public Stats(Hero hero, int heroLevel, Monster vsMonster)
@@ -66,9 +70,10 @@ namespace Merchant_RPG_build.Processing
 			this.CriticalRate = (hero.StartCriticalRate + hero.LevelCriticalRate * heroLevel) / 100.0;
 			this.Defense = (hero.StartDefense + hero.LevelDefense * heroLevel) / 100.0;
 			this.MagicDefense = (hero.StartMagicDefense + hero.LevelMagicDefense * heroLevel) / 100.0;
+			this.Hp = hero.StartHP + hero.LevelHP * heroLevel;
 		}
 
-		private Stats(Item originalItem, double attack, double accuracy, double criticalRate, double defense, double magicDefense)
+		private Stats(Item originalItem, double attack, double accuracy, double criticalRate, double defense, double magicDefense, double hp)
 		{
 			this.Accuracy = accuracy;
 			this.Damage = attack;
@@ -76,6 +81,27 @@ namespace Merchant_RPG_build.Processing
 			this.Defense = defense;
 			this.MagicDefense = magicDefense;
 			this.OriginalItem = originalItem;
+			this.Hp = hp;
+		}
+
+		public bool isInferiorTo(Stats other, StatsFilter statsMask)
+		{
+			return (this.Damage <= other.Damage || !statsMask.HasFlag(StatsFilter.Damage)) &&
+				(this.Accuracy <= other.Accuracy || !statsMask.HasFlag(StatsFilter.Accuracy)) &&
+				(this.CriticalRate <= other.CriticalRate || !statsMask.HasFlag(StatsFilter.CriticalRate)) &&
+				(this.Defense <= other.Defense || !statsMask.HasFlag(StatsFilter.Defense)) &&
+				(this.MagicDefense <= other.MagicDefense || !statsMask.HasFlag(StatsFilter.MagicDefense)) &&
+				(this.Hp <= other.Hp || !statsMask.HasFlag(StatsFilter.Hp));
+		}
+
+		public bool isSuperiorTo(Stats other, StatsFilter statsMask)
+		{
+			return (this.Damage >= other.Damage || !statsMask.HasFlag(StatsFilter.Damage)) &&
+				(this.Accuracy >= other.Accuracy || !statsMask.HasFlag(StatsFilter.Accuracy)) &&
+				(this.CriticalRate >= other.CriticalRate || !statsMask.HasFlag(StatsFilter.CriticalRate)) &&
+				(this.Defense >= other.Defense || !statsMask.HasFlag(StatsFilter.Defense)) &&
+				(this.MagicDefense >= other.MagicDefense || !statsMask.HasFlag(StatsFilter.MagicDefense)) &&
+				(this.Hp >= other.Hp || !statsMask.HasFlag(StatsFilter.Hp));
 		}
 
 		public static Stats operator +(Stats left, Stats right)
@@ -86,18 +112,8 @@ namespace Merchant_RPG_build.Processing
 				left.Accuracy + right.Accuracy,
 				left.CriticalRate + right.CriticalRate,
 				left.Defense + right.Defense,
-				left.MagicDefense + right.MagicDefense);
-		}
-
-		public static FieldInfo[] Fields = initStatFields();
-
-		private static FieldInfo[] initStatFields()
-		{
-			var ignoreFields = new string[]
-			{
-				"Fields", "OriginalItem"
-			};
-			return typeof(Stats).GetFields().Where(x => !ignoreFields.Contains(x.Name)).ToArray();
+				left.MagicDefense + right.MagicDefense,
+				left.Hp + right.Hp);
 		}
 	}
 }

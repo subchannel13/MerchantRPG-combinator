@@ -48,7 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Combinator.cs" />
+    <Compile Include="Processing\BuildPurpose.cs" />
+    <Compile Include="Processing\Combinator.cs" />
     <Compile Include="MetaData\Hero.cs" />
     <Compile Include="MetaData\Item.cs" />
     <Compile Include="MetaData\ItemSlot.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Processing\CritBinome.cs" />
     <Compile Include="Processing\EquipmentBuild.cs" />
     <Compile Include="Processing\Stats.cs" />
+    <Compile Include="Processing\StatsFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
