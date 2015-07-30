@@ -61,6 +61,7 @@ namespace Merchant_RPG_build.Processing
 		public Stats(Hero hero, int heroLevel, Monster vsMonster)
 		{
 			this.OriginalItem = null;
+			heroLevel--; //Heros start at level 1 and gain per level stats afterwards
 
 			this.Damage =
 				(hero.StartAttack + hero.LevelAttack * heroLevel) / (1 + vsMonster.Defense / 100.0) +

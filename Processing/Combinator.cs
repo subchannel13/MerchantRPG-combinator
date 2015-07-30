@@ -32,7 +32,7 @@ namespace Merchant_RPG_build.Processing
 					totalStats += AllItems[Slots[slot]][BuildCombinations[i].Combination[slot]];
 				}
 
-				double hitRate = Math.Min(1, totalStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion));
+				double hitRate = Math.Min(1, totalStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion / 100.0));
 				double criticalRate = Math.Min(totalStats.CriticalRate, 1);
 				double avgBattleLength = calcBattleLength((int)Math.Ceiling(monster.HP / totalStats.Damage), criticalRate) / hitRate;
 
@@ -74,12 +74,12 @@ namespace Merchant_RPG_build.Processing
 			this.Slots = AllItems.Keys.OrderBy(x => (int)x).ToArray();
 			this.BuildCombinations = new List<EquipmentBuild>();
 
-			BuildCombinations.Add(new EquipmentBuild(new int[Slots.Length]));
+			BuildCombinations.Add(new EquipmentBuild(0, new int[Slots.Length]));
 			bool moreCombinations = true;
 
 			while (moreCombinations)
 			{
-				var build = new EquipmentBuild(new int[Slots.Length]);
+				var build = new EquipmentBuild(BuildCombinations.Count, new int[Slots.Length]);
 				for (int i = 0; i < Slots.Length; i++)
 					build.Combination[i] = BuildCombinations[BuildCombinations.Count - 1].Combination[i];
 

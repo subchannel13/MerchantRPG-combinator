@@ -45,7 +45,7 @@ namespace Merchant_RPG_build
 							Console.Write(build.Items[slot].Name + ", ");
 						}
 						Console.WriteLine();
-						Console.WriteLine("    score: " + build.Score.ToString("0.##") + " " + buildScore[i]);
+						Console.WriteLine("    score: {0} {1}", build.Score.ToString("0.##"), buildScore[i]);
 					}
 				}
 
