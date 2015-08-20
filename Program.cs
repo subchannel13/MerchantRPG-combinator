@@ -26,7 +26,7 @@ namespace Merchant_RPG_build
 				"HP"
 			};
 			
-			var monster = Library.Monsters.Where(x => x.Name == "Ares Prime").First();
+			var monster = Library.Monsters.First(x => x.Name == "Ares Prime");
 
 			var combinator = new Combinator();
 			for (int i = 0; i < 4; i++)

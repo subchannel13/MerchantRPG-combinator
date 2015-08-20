@@ -14,7 +14,7 @@ namespace Merchant_RPG_build.Processing
 		private Dictionary<ItemSlot, Stats[]> AllItems;
 		private ItemSlot[] Slots;
 		private List<EquipmentBuild> BuildCombinations;
-		private static List<BattleScenario> battleTurns = new List<BattleScenario>();
+		private static readonly List<BattleScenario> battleTurns = new List<BattleScenario>();
 
 		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster, BuildPurpose buildFor)
 		{
@@ -143,7 +143,7 @@ namespace Merchant_RPG_build.Processing
 				if (filteredList.Count == 0)
 				{
 					var maxDamage = itemGroup.Max(x => x.Damage);
-					filteredList.Add(itemGroup.First(x => x.Damage == maxDamage));
+					filteredList.Add(itemGroup.First(x => Math.Abs(x.Damage - maxDamage) < 1e-3));
 				}
 
 				filteredItems.Add(itemGroup.Key, filteredList.ToArray());

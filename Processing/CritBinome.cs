@@ -7,8 +7,8 @@ namespace Merchant_RPG_build.Processing
 {
 	class CritBinome
 	{
-		private	int criticalPower;
-		private int normalPower;
+		private readonly int criticalPower;
+		private readonly int normalPower;
 
 		public CritBinome(int criticalPower, int normalPower)
 		{
