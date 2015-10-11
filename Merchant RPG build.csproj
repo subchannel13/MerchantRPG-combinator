@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetaData\ItemStereotype.cs" />
     <Compile Include="Processing\BuildPurpose.cs" />
     <Compile Include="Processing\Combinator.cs" />
     <Compile Include="MetaData\Hero.cs" />
