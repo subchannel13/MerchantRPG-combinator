@@ -32,8 +32,8 @@ namespace MerchantRPG.Data
 			this.MagicAttack = statFunc(stereotype.MagicAttackBase, stereotype.MagicAttackPerLevel) + magicAttack;
 			this.Accuracy = statFunc(stereotype.AccuracyBase, stereotype.AccuracyPerLevel) + accuracy;
 			this.CriticalRate = stereotype.CriticalRate + criticalRate;
-			this.Defense = statFunc(stereotype.AttackBase, stereotype.AttackPerLevel) + defense;
-			this.MagicDefense = statFunc(stereotype.AttackBase, stereotype.AttackPerLevel) + magicDefense;
+			this.Defense = statFunc(stereotype.DefenseBase, stereotype.DefensePerLevel) + defense;
+			this.MagicDefense = statFunc(stereotype.MagicDefenseBase, stereotype.MagicDefensePerLevel) + magicDefense;
 			this.Strength = strength;
 			this.Intelligence = intelligence;
 			this.Dexterity = dexterity;

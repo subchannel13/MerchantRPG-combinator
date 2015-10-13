@@ -10,8 +10,8 @@ namespace Merchant_RPG_build
 	{
 		public static void Main(string[] args)
 		{
-			//SingleMonsterAnalysis("Lich King");
-			FullAnalysis();
+			SingleMonsterAnalysis("Lich King");
+			//FullAnalysis();
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
