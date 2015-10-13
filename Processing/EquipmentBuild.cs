@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Merchant_RPG_build.MetaData;
+using MerchantRPG.Data;
 
 namespace Merchant_RPG_build.Processing
 {

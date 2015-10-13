@@ -31,31 +31,15 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MetaData\ItemStereotype.cs" />
     <Compile Include="Processing\BuildPurpose.cs" />
     <Compile Include="Processing\Combinator.cs" />
-    <Compile Include="MetaData\Hero.cs" />
-    <Compile Include="MetaData\Item.cs" />
-    <Compile Include="MetaData\ItemSlot.cs" />
-    <Compile Include="MetaData\Library.cs" />
-    <Compile Include="MetaData\Monster.cs" />
     <Compile Include="Processing\BattleScenario.cs" />
     <Compile Include="Processing\CritBinome.cs" />
     <Compile Include="Processing\EquipmentBuild.cs" />
@@ -67,6 +51,11 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MerchantRPG.Data\MerchantRPG.Data.csproj">
+      <Project>{1F0C39D6-B209-48F7-B4C5-A6E0B1BB1F99}</Project>
+      <Name>MerchantRPG.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
