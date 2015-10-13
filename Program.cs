@@ -23,10 +23,10 @@ namespace Merchant_RPG_build
 				"HP lost",
 				"turns",
 				"monster damage",
-				"HP"
+				"turns"
 			};
 			
-			var monster = Library.Monsters.First(x => x.Name == "Ares Prime");
+			var monster = Library.Monsters.First(x => x.Name == "Lich King");
 
 			var combinator = new Combinator();
 			for (int i = 0; i < 4; i++)

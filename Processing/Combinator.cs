@@ -104,7 +104,7 @@ namespace Merchant_RPG_build.Processing
 			var itemGroups = items.Select(x => new Stats(x, hero, monster)).GroupBy(x => x.OriginalItem.Slot);
 			var filteredItems = new Dictionary<ItemSlot, Stats[]>();
 
-			StatsFilter statsMask = (StatsFilter)0;
+			var statsMask = (StatsFilter)0;
 			switch (buildFor)
 			{
 				case BuildPurpose.MaxDefense:
