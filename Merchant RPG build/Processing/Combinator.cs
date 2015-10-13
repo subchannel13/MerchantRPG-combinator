@@ -15,9 +15,9 @@ namespace Merchant_RPG_build.Processing
 		private List<EquipmentBuild> BuildCombinations;
 		private static readonly List<BattleScenario> battleTurns = new List<BattleScenario>();
 
-		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster, BuildPurpose buildFor)
+		public IEnumerable<EquipmentBuild> AnalyzeHero(Hero hero, int heroLevel, Monster monster, BuildPurpose buildFor, int? maxItemLevel = null)
 		{
-			initItems(hero, heroLevel, monster, buildFor);
+			initItems(hero, maxItemLevel ?? heroLevel, monster, buildFor);
 
 			var heroStats = new Stats(hero, heroLevel, monster);
 
