@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MerchantRPG.Data;
@@ -107,33 +108,48 @@ namespace Merchant_RPG_build
 					writer.WriteLine();
 					var monster = Library.Monsters.First(x => x.Name == scenario.Item1);
 					
+					var lines = new List<string>();
+					
 					for (int i = 0; i < 4; i++)
 					{
+						int column = 0;
+						
 						var buildStyle = (BuildPurpose)i;
-						writer.WriteLine(BuildNames[i] + ":");
+						pushLine(lines, ref column, BuildNames[i] + ":\t\t\t");
 		
 						foreach (var hero in Library.Heroes)
 						{
-							writer.WriteLine(hero.Name);
+							pushLine(lines, ref column, hero.Name + "\t\t\t");
 							foreach (var build in combinator.AnalyzeHero(hero, scenario.Item2, monster, buildStyle, scenario.Item3))
 							{
 								for (int slot = 0; slot < build.Items.Length; slot++)
 								{
-									writer.WriteLine(build.Items[slot].Name);
+									string otherRows = "\t" + (slot + 1 == build.Items.Length ? BuildScoring[i] : "") + "\t\t";
+									pushLine(lines, ref column, build.Items[slot].Name + otherRows);
 								}
-								writer.WriteLine("score	{0}	{1}", build.Score.ToString("0.##"), BuildScoring[i]);
+								
+								pushLine(lines, ref column, string.Format("score	{0}\t\t", build.Score.ToString(build.Score < 100 ? "0.##" : "0")));
 							}
-							writer.WriteLine();
+							pushLine(lines, ref column, "");
 						}
 					}
-	
-					writer.WriteLine();
+					
+					foreach(var line in lines)
+						writer.WriteLine(line);
 				}
-				
-				writer.WriteLine();
 			}
 			
 			Console.WriteLine("Done. ");
+		}
+		
+		static void pushLine(IList<string> lines, ref int column, string text)
+		{
+			if (column < lines.Count)
+				lines[column] += text;
+			else
+				lines.Add(text);
+			
+			column++;
 		}
 	}
 }
