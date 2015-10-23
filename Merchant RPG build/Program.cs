@@ -26,9 +26,9 @@ namespace Merchant_RPG_build
 		};
 		static readonly string[] BuildScoring = new string[] {
 			"HP lost",
-			"turns",
-			"monster damage",
-			"turns"
+			"Turns",
+			"Dmg received",
+			"Turns"
 		};
 		
 		private static void SingleMonsterAnalysis(string monsterName)
@@ -62,18 +62,6 @@ namespace Merchant_RPG_build
 
 		static void FullAnalysis()
 		{
-			var buildNames = new string[] {
-				"Min HP loss",
-				"Min turns",
-				"Max defense",
-				"Max effective HP"
-			};
-			var buildScore = new string[] {
-				"HP lost",
-				"turns",
-				"monster damage",
-				"turns"
-			};
 			Tuple<string, int, int>[] scenarios = 
 			{
 				new Tuple<string, int, int>("Lich King", 40, 39),
@@ -108,34 +96,33 @@ namespace Merchant_RPG_build
 					writer.WriteLine();
 					var monster = Library.Monsters.First(x => x.Name == scenario.Item1);
 					
-					var lines = new List<string>();
-					
 					for (int i = 0; i < 4; i++)
 					{
+						var lines = new List<string>();
 						int column = 0;
 						
 						var buildStyle = (BuildPurpose)i;
-						pushLine(lines, ref column, BuildNames[i] + ":\t\t\t");
+						pushLine(lines, ref column, BuildNames[i] + ":\tWeapon\tHead\tChest\tGloves\tBoots\tTrinket\t" + BuildScoring[i]);
 		
 						foreach (var hero in Library.Heroes)
 						{
-							pushLine(lines, ref column, hero.Name + "\t\t\t");
+							pushLine(lines, ref column, hero.Name + "\t");
 							foreach (var build in combinator.AnalyzeHero(hero, scenario.Item2, monster, buildStyle, scenario.Item3))
 							{
 								for (int slot = 0; slot < build.Items.Length; slot++)
 								{
-									string otherRows = "\t" + (slot + 1 == build.Items.Length ? BuildScoring[i] : "") + "\t\t";
-									pushLine(lines, ref column, build.Items[slot].Name + otherRows);
+									lines[column -1] += build.Items[slot].Name + "\t";
 								}
 								
-								pushLine(lines, ref column, string.Format("score	{0}\t\t", build.Score.ToString(build.Score < 100 ? "0.##" : "0")));
+								lines[column -1] += build.Score.ToString(build.Score < 100 ? "0.##" : "0");
 							}
-							pushLine(lines, ref column, "");
 						}
+						
+						pushLine(lines, ref column, "");
+						
+						foreach(var line in lines)
+							writer.WriteLine(line);
 					}
-					
-					foreach(var line in lines)
-						writer.WriteLine(line);
 				}
 			}
 			
