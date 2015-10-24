@@ -4,13 +4,34 @@ using MerchantRPG.Data;
 
 namespace MerchantRPG.GeneticParty
 {
-	public class PartyFitness : IFitnessFunction
+	class PartyFitness : IFitnessFunction
 	{
-		private readonly Monster monster;
-		
-		public PartyFitness(Monster monster)
+		private readonly ASimulator simulator;
+
+		public PartyFitness(ASimulator simulator)
 		{
-			this.monster = monster;
+			this.simulator = simulator;
+		}
+
+		public int ChromosomeLength
+		{
+			get 
+			{
+				return
+					simulator.PartySize * (
+						1 + //hero class
+						(int)ItemSlot.N + //hero items
+						3 //potion A type, potion B type, potion A count (potion B count is deduced)
+					);
+			}
+		}
+
+		public int ChromosomeMaxValue
+		{
+			get
+			{
+				return Math.Max(simulator.MaxItemChoices, Math.Max(Library.Heroes.Length, 5));
+			}
 		}
 
 		#region IFitnessFunction implementation

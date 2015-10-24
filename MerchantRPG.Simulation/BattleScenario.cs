@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Merchant_RPG_build.Processing
+namespace MerchantRPG.Simulation
 {
-	class BattleScenario
+	public class BattleScenario
 	{
 		const int CacheSlots = 100;
 		const int MaxScenarioDepth = 20;

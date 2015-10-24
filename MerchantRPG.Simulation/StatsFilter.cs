@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Merchant_RPG_build.Processing
+namespace MerchantRPG.Simulation
 {
-	enum StatsFilter
+	public enum StatsFilter
 	{
 		Damage = 1 << 0,
 		Accuracy = 1 << 1,

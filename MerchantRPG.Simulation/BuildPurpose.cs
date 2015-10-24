@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Merchant_RPG_build.Processing
+namespace MerchantRPG.Simulation
 {
-	enum BuildPurpose
+	public enum BuildPurpose
 	{
 		MinHpLoss,
 		MinTurns,

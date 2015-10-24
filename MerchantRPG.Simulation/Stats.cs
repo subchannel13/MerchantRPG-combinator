@@ -2,9 +2,9 @@
 using System.Linq;
 using MerchantRPG.Data;
 
-namespace Merchant_RPG_build.Processing
+namespace MerchantRPG.Simulation
 {
-	class Stats
+	public class Stats
 	{
 		public Item OriginalItem;
 

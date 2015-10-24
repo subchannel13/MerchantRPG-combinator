@@ -17,8 +17,15 @@ namespace MerchantRPG.GeneticParty
 		
 		private static void Optimize(string monsterName)
 		{
-			var fitnessEvaluator = new PartyFitness(Library.Monsters.First(x => x.Name == monsterName));
-			var population = new Population(5, new ShortArrayChromosome(10, 40), fitnessEvaluator, new RankSelection());
+			var monster = Library.Monsters.First(x => x.Name == monsterName);
+
+			var simulator = new SingleMonster(monster, 40, 40);
+			var fitnessEvaluator = new PartyFitness(simulator);
+			
+			var population = new Population(5,
+				new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
+				fitnessEvaluator,
+				new RankSelection());
 		}
 	}
 }

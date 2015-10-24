@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using MerchantRPG.Data;
+using MerchantRPG.Simulation;
 
 namespace Merchant_RPG_build.Processing
 {
-	class EquipmentBuild
+	public class EquipmentBuild
 	{
 		public readonly int Id;
 		public readonly int[] Combination;

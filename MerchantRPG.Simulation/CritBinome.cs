@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Merchant_RPG_build.Processing
+namespace MerchantRPG.Simulation
 {
-	class CritBinome
+	public class CritBinome
 	{
 		private readonly int criticalPower;
 		private readonly int normalPower;

@@ -46,9 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ASimulator.cs" />
     <Compile Include="PartyFitness.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleMonster.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -58,6 +60,10 @@
     <ProjectReference Include="..\MerchantRPG.Data\MerchantRPG.Data.csproj">
       <Project>{1F0C39D6-B209-48F7-B4C5-A6E0B1BB1F99}</Project>
       <Name>MerchantRPG.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MerchantRPG.Simulation\MerchantRPG.Simulation.csproj">
+      <Project>{F6C8ED7E-E189-4668-A2A4-B173F27300DD}</Project>
+      <Name>MerchantRPG.Simulation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

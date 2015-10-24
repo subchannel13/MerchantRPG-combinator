@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MerchantRPG.Data;
+using MerchantRPG.Simulation;
 using Merchant_RPG_build.Processing;
 
 namespace Merchant_RPG_build
