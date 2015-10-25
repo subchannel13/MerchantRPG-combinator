@@ -2,6 +2,7 @@
 using System.Linq;
 using AForge.Genetic;
 using MerchantRPG.Data;
+using MerchantRPG.GeneticParty.Processing;
 
 namespace MerchantRPG.GeneticParty
 {
@@ -19,7 +20,7 @@ namespace MerchantRPG.GeneticParty
 		{
 			var monster = Library.Monsters.First(x => x.Name == monsterName);
 
-			var simulator = new SingleMonster(monster, 40, 40);
+			var simulator = new SingleMonsterSimulator(monster, 40, 40);
 			var fitnessEvaluator = new PartyFitness(simulator);
 			
 			var population = new Population(5,

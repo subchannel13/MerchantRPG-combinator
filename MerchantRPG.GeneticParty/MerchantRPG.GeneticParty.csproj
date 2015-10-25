@@ -46,11 +46,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ASimulator.cs" />
-    <Compile Include="PartyFitness.cs" />
+    <Compile Include="Processing\ASimulator.cs" />
+    <Compile Include="Processing\HeroBuild.cs" />
+    <Compile Include="Processing\PartyFitness.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SingleMonster.cs" />
+    <Compile Include="Processing\SingleMonsterSimulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

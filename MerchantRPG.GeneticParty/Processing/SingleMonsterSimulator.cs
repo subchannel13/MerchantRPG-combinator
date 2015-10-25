@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using MerchantRPG.Data;
 
-namespace MerchantRPG.GeneticParty
+namespace MerchantRPG.GeneticParty.Processing
 {
-	class SingleMonster : ASimulator
+	class SingleMonsterSimulator : ASimulator
 	{
-		public SingleMonster(Monster monster, int heroLevel, int itemLevel) : base(monster, heroLevel, itemLevel)
+		public SingleMonsterSimulator(Monster monster, int heroLevel, int itemLevel) : base(monster, heroLevel, itemLevel)
 		{ }
 
 		public override object Run()
