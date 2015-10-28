@@ -30,7 +30,7 @@ namespace MerchantRPG.Simulation
 			{
 				this.binomes = null;
 				for (int i = 0; i <= CacheSlots; i++)
-					this.cachedTurns[i] = monsterHits * (1 + i / (double)CacheSlots);
+					this.cachedTurns[i] = monsterHits / (1 + i / (double)CacheSlots);
 			}
 		}
 

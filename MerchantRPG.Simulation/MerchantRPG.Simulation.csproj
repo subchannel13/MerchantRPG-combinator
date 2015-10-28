@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleScenario.cs" />
+    <Compile Include="BattleTurnsCache.cs" />
     <Compile Include="BuildPurpose.cs" />
     <Compile Include="CritBinome.cs" />
     <Compile Include="ItemFilter.cs" />

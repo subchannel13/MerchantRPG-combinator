@@ -7,7 +7,7 @@ namespace MerchantRPG.Simulation
 {
 	public enum StatsFilter
 	{
-		Damage = 1 << 0,
+		Damage = 1 << 0,	//Any damage type
 		Accuracy = 1 << 1,
 		CriticalRate = 1 << 2,
 
@@ -17,5 +17,8 @@ namespace MerchantRPG.Simulation
 
 		Offensive = Damage | Accuracy | CriticalRate,
 		Defenses = Defense | MagicDefense,
+		
+		
+		MagicAttack = 1 << 6,
 	}
 }

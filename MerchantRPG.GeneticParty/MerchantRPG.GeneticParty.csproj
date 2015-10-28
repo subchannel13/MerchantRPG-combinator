@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Processing\ASimulator.cs" />
+    <Compile Include="Processing\ChromosomeDescription.cs" />
     <Compile Include="Processing\HeroBuild.cs" />
     <Compile Include="Processing\PartyFitness.cs" />
     <Compile Include="Program.cs" />

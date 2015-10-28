@@ -9,15 +9,17 @@ namespace MerchantRPG.GeneticParty.Processing
 {
 	abstract class ASimulator
 	{
+		public const double HeroDead = 1;
+		
 		protected Monster monster;
+		public int HeroLevel { get; private set; }
 		protected Dictionary<Hero, Stats[][]> AllItems = new Dictionary<Hero, Stats[][]>();
 		private int maxItemChoices = 0;
-		private int[] itemChoices;
 
-		public ASimulator(Monster monster, int heroLevel, int itemLevel)
+		protected ASimulator(Monster monster, int heroLevel, int itemLevel)
 		{
+			this.HeroLevel = heroLevel;
 			this.monster = monster;
-			this.itemChoices = new int[(int)ItemSlot.N];
 
 			foreach (var hero in Library.Heroes)
 			{
@@ -26,15 +28,14 @@ namespace MerchantRPG.GeneticParty.Processing
 				for (int i = 0; i < relevantItems.Count; i++)
 				{
 					items[i] = relevantItems[(ItemSlot)i];
-					itemChoices[i] = Math.Max(itemChoices[i], items[i].Length);
+					maxItemChoices = Math.Max(maxItemChoices, items[i].Length);
 				}
 
 				AllItems.Add(hero, items);
-				maxItemChoices = Math.Max(maxItemChoices, itemChoices.Max());
 			}
 		}
 
-		public abstract object Run();
+		public abstract double[] Run(IList<HeroBuild> builds, int frontCount);
 
 		public int MaxItemChoices
 		{
@@ -46,9 +47,30 @@ namespace MerchantRPG.GeneticParty.Processing
 			get { return monster.MaxPartyMembers; }
 		}
 
-		public int ItemChoices(int slot)
+		public int ItemChoices(Hero hero, int slot)
 		{
-			return itemChoices[slot];
+			return AllItems[hero][slot].Length;
+		}
+
+		public Item ItemData(Hero hero, int slot, int index)
+		{
+			return AllItems[hero][slot][index].OriginalItem;
+		}
+		
+		protected Stats PotionBonus(int potionType)
+		{
+			var type = StatsFilter.Accuracy;
+			
+			if (potionType == 1)
+				type = StatsFilter.Damage;
+			if (potionType == 2)
+				type = StatsFilter.MagicAttack;
+			if (potionType == 3)
+				type = StatsFilter.Defense;
+			if (potionType == 4)
+				type = StatsFilter.MagicDefense;
+			
+			return new Stats(type, monster);
 		}
 	}
 }

@@ -70,6 +70,34 @@ namespace MerchantRPG.Simulation
 			this.MagicDefense = (hero.StartMagicDefense + hero.LevelMagicDefense * heroLevel) / 100.0;
 			this.Hp = hero.StartHP + hero.LevelHP * heroLevel;
 		}
+		
+		public Stats(StatsFilter bonusType, Monster vsMonster)
+		{
+			this.OriginalItem = null;
+
+			this.Damage = 0;
+			this.Accuracy = 0;
+			this.CriticalRate = 0;
+			this.Defense = 0;
+			this.MagicDefense = 0;
+			this.Hp = 0;
+			
+			if (bonusType == StatsFilter.Damage)
+				this.Damage = 1 / (1 + vsMonster.Defense / 100.0);
+			if (bonusType == StatsFilter.MagicAttack)
+				this.Damage = 1 / (1 + vsMonster.MagicDefense / 100.0);
+			
+			if (bonusType == StatsFilter.Accuracy)
+				this.Accuracy = 1;
+			if (bonusType == StatsFilter.CriticalRate)
+				this.CriticalRate = 1;
+			if (bonusType == StatsFilter.Defense)
+				this.Defense = 1;
+			if (bonusType == StatsFilter.MagicDefense)
+				this.MagicDefense = 1;
+			if (bonusType == StatsFilter.Hp)
+				this.Hp = 1;
+		}
 
 		private Stats(Item originalItem, double attack, double accuracy, double criticalRate, double defense, double magicDefense, double hp)
 		{
@@ -112,6 +140,18 @@ namespace MerchantRPG.Simulation
 				left.Defense + right.Defense,
 				left.MagicDefense + right.MagicDefense,
 				left.Hp + right.Hp);
+		}
+		
+		public static Stats operator *(Stats left, double right)
+		{
+			return new Stats(
+				left.OriginalItem,
+				left.Damage * right,
+				left.Accuracy * right,
+				left.CriticalRate * right,
+				left.Defense * right,
+				left.MagicDefense * right,
+				left.Hp * right);
 		}
 	}
 }
