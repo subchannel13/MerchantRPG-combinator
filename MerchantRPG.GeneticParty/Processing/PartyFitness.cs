@@ -156,6 +156,7 @@ namespace MerchantRPG.GeneticParty.Processing
 				sb.Append(build.PotionCounts[1]);
 				sb.Append(" x ");
 				sb.Append(potionName(build.PotionTypes[1]));
+				sb.AppendLine();
 			}
 			
 			return sb.ToString();

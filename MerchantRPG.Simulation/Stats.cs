@@ -88,13 +88,13 @@ namespace MerchantRPG.Simulation
 				this.Damage = 1 / (1 + vsMonster.MagicDefense / 100.0);
 			
 			if (bonusType == StatsFilter.Accuracy)
-				this.Accuracy = 1;
+				this.Accuracy = 0.01;
 			if (bonusType == StatsFilter.CriticalRate)
-				this.CriticalRate = 1;
+				this.CriticalRate = 0.01;
 			if (bonusType == StatsFilter.Defense)
-				this.Defense = 1;
+				this.Defense = 0.01;
 			if (bonusType == StatsFilter.MagicDefense)
-				this.MagicDefense = 1;
+				this.MagicDefense = 0.01;
 			if (bonusType == StatsFilter.Hp)
 				this.Hp = 1;
 		}

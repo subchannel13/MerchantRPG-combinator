@@ -5,6 +5,7 @@ using System.Text;
 
 namespace MerchantRPG.Simulation
 {
+	[Flags()]
 	public enum StatsFilter
 	{
 		Damage = 1 << 0,	//Any damage type
@@ -17,7 +18,7 @@ namespace MerchantRPG.Simulation
 
 		Offensive = Damage | Accuracy | CriticalRate,
 		Defenses = Defense | MagicDefense,
-		
+		All = Offensive | Defenses | Hp,
 		
 		MagicAttack = 1 << 6,
 	}

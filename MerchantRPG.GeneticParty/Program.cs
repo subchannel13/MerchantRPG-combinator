@@ -10,7 +10,7 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			Optimize("Haunted Harwood");
+			Optimize("Basamus");
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
@@ -20,13 +20,15 @@ namespace MerchantRPG.GeneticParty
 		{
 			var monster = Library.Monsters.First(x => x.Name == monsterName);
 
-			var simulator = new SingleMonsterSimulator(monster, 40, 40);
+			var simulator = monster.MaxPartyMembers > 1 ?
+				(ASimulator)new PartySimulator(monster, 40, 40) :
+			    (ASimulator)new SingleHeroSimulator(monster, 40, 40);
 			var fitnessEvaluator = new PartyFitness(simulator);
 			
 			var population = new Population(20,
 				new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
 				fitnessEvaluator,
-				new EliteSelection());
+				new RankSelection());
 			population.RandomSelectionPortion = 0.3;
 				
 			double lastFitness = 0;
@@ -42,10 +44,9 @@ namespace MerchantRPG.GeneticParty
 					stagnation = 0;
 				}
 				
-				if (stagnation > 1000)
-					population.MutationRate = Math.Min(stagnation / 3000.0, 0.25);
-				else
-					population.MutationRate = 0.1;
+				population.MutationRate = stagnation > 1000 ? 
+					Math.Min(stagnation / 3000.0, 0.25) : 
+					0.1;
 			}
 		}
 	}

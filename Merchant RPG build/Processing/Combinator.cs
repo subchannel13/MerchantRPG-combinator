@@ -63,7 +63,24 @@ namespace Merchant_RPG_build.Processing
 
 		private void initItems(Hero hero, int maxItemLevel, Monster monster, BuildPurpose buildFor)
 		{
-			this.AllItems = ItemFilter.RelevantFor(hero, maxItemLevel, monster, buildFor);
+			var statsMask = (StatsFilter)0;
+			switch (buildFor)
+			{
+				case BuildPurpose.MaxDefense:
+					statsMask = StatsFilter.Defenses;
+					break;
+				case BuildPurpose.MaxEffectiveHp:
+					statsMask = StatsFilter.Defenses | StatsFilter.Hp;
+					break;
+				case BuildPurpose.MinHpLoss:
+					statsMask = StatsFilter.Defenses | StatsFilter.Offensive;
+					break;
+				case BuildPurpose.MinTurns:
+					statsMask = StatsFilter.Offensive;
+					break;
+			}
+			
+			this.AllItems = ItemFilter.RelevantFor(hero, maxItemLevel, monster, statsMask);
 			this.Slots = AllItems.Keys.OrderBy(x => (int)x).ToArray();
 			this.BuildCombinations = new List<EquipmentBuild>();
 

@@ -23,7 +23,7 @@ namespace MerchantRPG.GeneticParty.Processing
 
 			foreach (var hero in Library.Heroes)
 			{
-				var relevantItems = ItemFilter.RelevantFor(hero, itemLevel, monster, BuildPurpose.MinTurns);
+				var relevantItems = ItemFilter.RelevantFor(hero, itemLevel, monster, StatsFilter.All);
 				var items = new Stats[(int)ItemSlot.N][];
 				for (int i = 0; i < relevantItems.Count; i++)
 				{
@@ -57,7 +57,25 @@ namespace MerchantRPG.GeneticParty.Processing
 			return AllItems[hero][slot][index].OriginalItem;
 		}
 		
-		protected Stats PotionBonus(int potionType)
+		protected Stats HeroStats(HeroBuild build)
+		{
+			var hero = Library.Heroes[build.HeroType];
+			double potionStrength = Math.Max(10, HeroLevel) / 10.0;
+			
+			var heroStats = new Stats(hero, HeroLevel, monster);
+			heroStats += potionBonus(build.PotionTypes[0]) * potionStrength * build.PotionCounts[0];
+			heroStats += potionBonus(build.PotionTypes[1]) * potionStrength * build.PotionCounts[1];
+			
+			for(int i = 0; i < build.Items.Length; i++)
+				heroStats += AllItems[hero][i][build.Items[i]];
+			
+			heroStats.Accuracy = Math.Min(1, heroStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion / 100.0));
+			heroStats.CriticalRate = Math.Min(heroStats.CriticalRate, 1);
+			
+			return heroStats;
+		}
+		
+		private Stats potionBonus(int potionType)
 		{
 			var type = StatsFilter.Accuracy;
 			
