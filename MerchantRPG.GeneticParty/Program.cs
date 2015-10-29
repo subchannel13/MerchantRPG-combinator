@@ -41,8 +41,8 @@ namespace MerchantRPG.GeneticParty
 					if (population.BestChromosome.Fitness > lastFitness)
 					{
 						lastFitness = population.BestChromosome.Fitness;
-						Console.WriteLine(fitnessEvaluator.Translate(population.BestChromosome).Trim());
-						Console.WriteLine(population.BestChromosome.Fitness);
+						Console.Write(fitnessEvaluator.Translate(population.BestChromosome).Trim());
+						Console.WriteLine(" " + population.BestChromosome.Fitness);
 						Console.WriteLine();
 						stagnation = 0;
 					}

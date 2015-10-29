@@ -51,26 +51,32 @@ namespace MerchantRPG.GeneticParty.Processing
 			
 			while(partyHpLoss.Any(x => x < 1) && monsterHp > 0)
 			{
-				int frontRowCount = partyHpLoss.Take(frontRowSeparator).Any(x => x < 1) ? frontRowSeparator : partyStats.Length;
+				frontRowSeparator = partyHpLoss.Take(frontRowSeparator).Any(x => x < 1) ? frontRowSeparator : partyStats.Length;
+				int frontRowCount = partyHpLoss.Take(frontRowSeparator).Count(x => x < 1);
 				
 				for(int i = 0; i < partyStats.Length; i++)
 				{
 					if (partyHpLoss[i] >= 1)
 						continue;
 					
-					monsterHp -= partyStats[i].Damage * (1 + partyStats[i].CriticalRate) * partyStats[i].Accuracy;
+					monsterHp -= partyStats[i].Damage * (1 + partyStats[i].CriticalRate) * partyStats[i].Accuracy / 2;
 					
-					partyHpLoss[i] += (
-						monster.Attack / (1 + partyStats[i].Defense) + 
-						monster.MagicAttack / (1 + partyStats[i].MagicDefense)
-					) / (2 * frontRowCount * partyStats[i].Hp);
+					if (i < frontRowSeparator)
+						partyHpLoss[i] += (
+							monster.Attack / (1 + partyStats[i].Defense) + 
+							monster.MagicAttack / (1 + partyStats[i].MagicDefense)
+						) / (2 * frontRowCount * partyStats[i].Hp);
 					
 					if (partyHpLoss[i] > 1)
 						partyHpLoss[i] = 1;
 				}
 			}
 			
-			return partyHpLoss;
+			var totalHp = new double[partyStats.Length + 1];
+			Array.Copy(partyHpLoss, totalHp, partyStats.Length);
+			totalHp[partyStats.Length] = (monsterHp < 0) ? 0 : (monsterHp /  monster.HP);
+				
+			return totalHp;
 		}
 
 		private static long depth = 0;
@@ -96,7 +102,8 @@ namespace MerchantRPG.GeneticParty.Processing
 			
 			if (currentHero >= partyStats.Length)
 			{
-				frontRowCount = partyHpLoss.Take(frontRowSeparator).Any(x => x < 1) ? frontRowSeparator : partyStats.Length;
+				frontRowSeparator = partyHpLoss.Take(frontRowSeparator).Any(x => x < 1) ? frontRowSeparator : partyStats.Length;
+				frontRowCount = partyHpLoss.Take(frontRowSeparator).Count(x => x < 1);
 				currentHero = 0;
 			}
 			

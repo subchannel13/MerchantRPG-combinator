@@ -86,16 +86,16 @@ namespace MerchantRPG.GeneticParty.Processing
 			{
 				frontRow = chrom.Value[simulator.PartySize * BuildSize];
 				
-				if (chrom.Value[simulator.PartySize * BuildSize] < 1)
+				if (frontRow < 1 || frontRow < simulator.PartySize - 3)
 					invalidGenes += 1;
-				if (chrom.Value[simulator.PartySize * BuildSize] > 3)
+				if (frontRow > 3)
 					invalidGenes += chrom.Value[simulator.PartySize * BuildSize] - 3;
 			}
 			
 
 			if (invalidGenes > 0)
 			{
-				descriptions.Add(chrom.Value, new ChromosomeDescription(null, 0, invalidGenes));
+				descriptions.Add(chrom.Value, new ChromosomeDescription(null, 0, 0, invalidGenes));
 				return 1 / (InvalidChromosomeScore + invalidGenes);
 			}
 			
@@ -106,7 +106,7 @@ namespace MerchantRPG.GeneticParty.Processing
 					2 : 
 					hpLoss[i];
 						
-			descriptions.Add(chrom.Value, new ChromosomeDescription(builds, frontRow, 0));
+			descriptions.Add(chrom.Value, new ChromosomeDescription(builds, frontRow, hpLoss.Count(x => Math.Abs(x - ASimulator.HeroDead) < 1e-2), 0));
 			return 1 / (healCost + 1);
 		}
 
@@ -115,7 +115,7 @@ namespace MerchantRPG.GeneticParty.Processing
 		public string Translate(IChromosome chromosome)
 		{
 			var chromValue = (chromosome as ShortArrayChromosome).Value;
-			var description = new ChromosomeDescription(null, 0, 0);
+			var description = new ChromosomeDescription(null, 0, 0, 0);
 			foreach(var desc in descriptions)
 				if (chromValue.SequenceEqual(desc.Key))
 				{
@@ -133,7 +133,7 @@ namespace MerchantRPG.GeneticParty.Processing
 			
 			for (int heroI = 0; heroI < simulator.PartySize; heroI++)
 			{
-				if (heroI + 1 == description.FrontRowCount && simulator.PartySize > 1)
+				if (heroI == description.FrontRowCount && simulator.PartySize > 1)
 					sb.AppendLine("Back row:");
 				
 				var build = description.Builds[heroI];
@@ -159,6 +159,7 @@ namespace MerchantRPG.GeneticParty.Processing
 				sb.AppendLine();
 			}
 			
+			sb.Append(description.Deaths + " deaths");
 			return sb.ToString();
 		}
 		
