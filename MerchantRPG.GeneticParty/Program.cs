@@ -10,7 +10,7 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			Optimize("Basamus");
+			Optimize("Lich King");
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
@@ -21,32 +21,35 @@ namespace MerchantRPG.GeneticParty
 			var monster = Library.Monsters.First(x => x.Name == monsterName);
 
 			var simulator = monster.MaxPartyMembers > 1 ?
-				(ASimulator)new PartySimulator(monster, 40, 40) :
+				(ASimulator)new PartySimulator(monster, 40, 40, false) :
 			    (ASimulator)new SingleHeroSimulator(monster, 40, 40);
 			var fitnessEvaluator = new PartyFitness(simulator);
 			
-			var population = new Population(20,
-				new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
-				fitnessEvaluator,
-				new RankSelection());
-			population.RandomSelectionPortion = 0.3;
-				
 			double lastFitness = 0;
-			for(int stagnation = 0; stagnation < 10000; stagnation++)
+			while(true)
 			{
-				population.RunEpoch();
-				if (population.BestChromosome.Fitness > lastFitness)
+				var population = new Population(20,
+					new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
+					fitnessEvaluator,
+					new RankSelection());
+				population.RandomSelectionPortion = 0.15;
+					
+				for(int stagnation = 0; stagnation < 10000; stagnation++)
 				{
-					lastFitness = population.BestChromosome.Fitness;
-					Console.WriteLine(fitnessEvaluator.Translate(population.BestChromosome).Trim());
-					Console.WriteLine(population.BestChromosome.Fitness);
-					Console.WriteLine();
-					stagnation = 0;
+					population.RunEpoch();
+					if (population.BestChromosome.Fitness > lastFitness)
+					{
+						lastFitness = population.BestChromosome.Fitness;
+						Console.WriteLine(fitnessEvaluator.Translate(population.BestChromosome).Trim());
+						Console.WriteLine(population.BestChromosome.Fitness);
+						Console.WriteLine();
+						stagnation = 0;
+					}
+					
+					population.MutationRate = stagnation > 1000 ? 
+						Math.Min(stagnation / 3000.0, 0.25) : 
+						0.1;
 				}
-				
-				population.MutationRate = stagnation > 1000 ? 
-					Math.Min(stagnation / 3000.0, 0.25) : 
-					0.1;
 			}
 		}
 	}

@@ -8,8 +8,12 @@ namespace MerchantRPG.GeneticParty.Processing
 {
 	class PartySimulator : ASimulator
 	{
-		public PartySimulator(Monster monster, int heroLevel, int itemLevel) : base(monster, heroLevel, itemLevel)
-		{ }
+		private bool exhaustive;
+		
+		public PartySimulator(Monster monster, int heroLevel, int itemLevel, bool exhaustiveSimulation) : base(monster, heroLevel, itemLevel)
+		{
+			this.exhaustive	= exhaustiveSimulation;
+		}
 
 		#region implemented abstract members of ASimulator
 
@@ -21,27 +25,62 @@ namespace MerchantRPG.GeneticParty.Processing
 			for(int i = 0; i < builds.Count; i++)
 				partyStats[i] = this.HeroStats(builds[i]);
 			
-			takeTurn(
-				totalHpLoss,
-				partyStats,
-				partyHpLoss,
-				monster.HP,
-				frontCount,
-				frontCount,
-				0,
-				1
-			);
+			if (exhaustive)
+				takeTurn(
+					totalHpLoss,
+					partyStats,
+					partyHpLoss,
+					monster.HP,
+					frontCount,
+					frontCount,
+					0,
+					1
+				);
+			else
+				totalHpLoss = simpleSimulation(partyStats, frontCount);
 			
 			return totalHpLoss;
 		}
 
 		#endregion
-		
+
+		private double[] simpleSimulation(Stats[] partyStats, int frontRowSeparator)
+		{
+			var partyHpLoss = new double[partyStats.Length];
+			double monsterHp = monster.HP;
+			
+			while(partyHpLoss.Any(x => x < 1) && monsterHp > 0)
+			{
+				int frontRowCount = partyHpLoss.Take(frontRowSeparator).Any(x => x < 1) ? frontRowSeparator : partyStats.Length;
+				
+				for(int i = 0; i < partyStats.Length; i++)
+				{
+					if (partyHpLoss[i] >= 1)
+						continue;
+					
+					monsterHp -= partyStats[i].Damage * (1 + partyStats[i].CriticalRate) * partyStats[i].Accuracy;
+					
+					partyHpLoss[i] += (
+						monster.Attack / (1 + partyStats[i].Defense) + 
+						monster.MagicAttack / (1 + partyStats[i].MagicDefense)
+					) / (2 * frontRowCount * partyStats[i].Hp);
+					
+					if (partyHpLoss[i] > 1)
+						partyHpLoss[i] = 1;
+				}
+			}
+			
+			return partyHpLoss;
+		}
+
 		private static long depth = 0;
 		private static long maxDepth = 0;
 		
 		private void takeTurn(double[] totalHpLoss, Stats[] partyStats, double[] partyHpLoss, double monsterHp, int frontRowSeparator, int frontRowCount, int currentHero, double stateChance)
 		{
+			if (depth > 1e3)
+				depth = depth;
+			
 			depth++;
 			maxDepth = Math.Max(maxDepth, depth);
 			
@@ -106,6 +145,9 @@ namespace MerchantRPG.GeneticParty.Processing
 			var nextHpLoss = new double[partyHpLoss.Length];
 			Array.Copy(partyHpLoss, nextHpLoss, partyHpLoss.Length);
 			
+			if (currentHero >= frontRowCount)
+				return nextHpLoss;
+			
 			nextHpLoss[currentHero] += (
 						monster.Attack / (1 + partyStats[currentHero].Defense) + 
 						monster.MagicAttack / (1 + partyStats[currentHero].MagicDefense)
@@ -117,7 +159,7 @@ namespace MerchantRPG.GeneticParty.Processing
 			return nextHpLoss;
 		}
 		
-		private static void addHpLoss(double[] destination, double[] source, double factor)
+		private static void addHpLoss(IList<double> destination, double[] source, double factor)
 		{
 			for(int i = 0; i < source.Length; i++)
 				destination[i] += source[i] * factor;
