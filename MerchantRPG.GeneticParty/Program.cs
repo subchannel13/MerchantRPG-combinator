@@ -23,11 +23,12 @@ namespace MerchantRPG.GeneticParty
 			var simulator = monster.MaxPartyMembers > 1 ?
 				(ASimulator)new PartySimulator(monster, 40, 40, false) :
 			    (ASimulator)new SingleHeroSimulator(monster, 40, 40);
-			var fitnessEvaluator = new PartyFitness(simulator);
+			
 			
 			double lastFitness = 0;
 			while(true)
 			{
+				var fitnessEvaluator = new PartyFitness(simulator);
 				var population = new Population(20,
 					new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
 					fitnessEvaluator,
