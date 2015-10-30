@@ -11,9 +11,11 @@ namespace MerchantRPG.GeneticParty.Processing
 	{
 		private const int BuildSize = 1 + //hero class
 						(int)ItemSlot.N + //hero items
-						3; //potion A type, potion B type, potion A count (potion B count is deduced)
-		private const int MaxPotions = 8;
-		private const int PotionTypes = 5;
+						3; //enhancment A type, enhancment B type, enhancment A count (enhancment B count is deduced)
+		
+		private const int MaxEnhancment = 8;
+		private const int EnhancmentTypes = 5;
+		private const int BoostTypes = 5;
 		private const double InvalidChromosomeScore = 10000;
 
 		private readonly ASimulator simulator;
@@ -36,7 +38,7 @@ namespace MerchantRPG.GeneticParty.Processing
 		{
 			get
 			{
-				return Math.Max(simulator.MaxItemChoices, Math.Max(Library.Heroes.Length, PotionTypes));
+				return Math.Max(simulator.MaxItemChoices, Math.Max(Library.Heroes.Length, EnhancmentTypes));
 			}
 		}
 
@@ -54,13 +56,14 @@ namespace MerchantRPG.GeneticParty.Processing
 			{
 				int offset = heroI * BuildSize;
 				var items = new int[(int)ItemSlot.N];
-				Array.Copy(chrom.Value, offset + 1, items, 0, items.Length);
+				var itemCount = items.Length;
+				Array.Copy(chrom.Value, offset + 1, items, 0, itemCount);
 
 				var build = new HeroBuild(
 					chrom.Value[offset],
 					items,
-					new int[] { chrom.Value[offset + BuildSize - 3], chrom.Value[offset + BuildSize - 2] },
-					new int[] { chrom.Value[offset + BuildSize - 1], MaxPotions - chrom.Value[offset + BuildSize - 1] }
+					new int[] { chrom.Value[offset + itemCount + 1], chrom.Value[offset + itemCount + 2] },
+					new int[] { chrom.Value[offset + itemCount + 3], MaxEnhancment - chrom.Value[offset + itemCount + 3] }
 				);
 				builds.Add(build);
 
@@ -74,12 +77,13 @@ namespace MerchantRPG.GeneticParty.Processing
 							invalidGenes += build.Items[i] - maxIndex + 1;
 					}
 				
-				if (build.PotionTypes[0] >= PotionTypes)
-					invalidGenes += build.PotionTypes[0] - PotionTypes + 1;
-				if (build.PotionTypes[1] >= PotionTypes)
-					invalidGenes += build.PotionTypes[1] - PotionTypes + 1;
-				if (build.PotionCounts[0] >= MaxPotions)
-					invalidGenes += build.PotionCounts[0] - MaxPotions;
+				if (build.EnhancmentTypes[0] >= EnhancmentTypes)
+					invalidGenes += build.EnhancmentTypes[0] - EnhancmentTypes + 1;
+				if (build.EnhancmentTypes[1] >= EnhancmentTypes)
+					invalidGenes += build.EnhancmentTypes[1] - EnhancmentTypes + 1;
+				if (build.EnhancmentCounts[0] >= MaxEnhancment)
+					invalidGenes += build.EnhancmentCounts[0] - MaxEnhancment;
+
 				
 				/*for(int i = heroI + 1; i < simulator.PartySize; i++)
 					if (build.HeroType == chrom.Value[i * BuildSize])
@@ -152,14 +156,14 @@ namespace MerchantRPG.GeneticParty.Processing
 				}
 				
 				sb.Append(", ");
-				sb.Append(build.PotionCounts[0]);
+				sb.Append(build.EnhancmentCounts[0]);
 				sb.Append(" x ");
-				sb.Append(potionName(build.PotionTypes[0]));
+				sb.Append(potionName(build.EnhancmentTypes[0]));
 				
 				sb.Append(", ");
-				sb.Append(build.PotionCounts[1]);
+				sb.Append(build.EnhancmentCounts[1]);
 				sb.Append(" x ");
-				sb.Append(potionName(build.PotionTypes[1]));
+				sb.Append(potionName(build.EnhancmentTypes[1]));
 				sb.AppendLine();
 			}
 			

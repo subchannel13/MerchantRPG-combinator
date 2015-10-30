@@ -63,8 +63,8 @@ namespace MerchantRPG.GeneticParty.Processing
 			double potionStrength = Math.Max(10, HeroLevel) / 10.0;
 			
 			var heroStats = new Stats(hero, HeroLevel, monster);
-			heroStats += potionBonus(build.PotionTypes[0]) * potionStrength * build.PotionCounts[0];
-			heroStats += potionBonus(build.PotionTypes[1]) * potionStrength * build.PotionCounts[1];
+			heroStats += enhancmentBonus(build.EnhancmentTypes[0]) * potionStrength * build.EnhancmentCounts[0];
+			heroStats += enhancmentBonus(build.EnhancmentTypes[1]) * potionStrength * build.EnhancmentCounts[1];
 			
 			for(int i = 0; i < build.Items.Length; i++)
 				heroStats += AllItems[hero][i][build.Items[i]];
@@ -75,7 +75,7 @@ namespace MerchantRPG.GeneticParty.Processing
 			return heroStats;
 		}
 		
-		private Stats potionBonus(int potionType)
+		private Stats enhancmentBonus(int potionType)
 		{
 			var type = StatsFilter.Accuracy;
 			

@@ -10,6 +10,7 @@ namespace MerchantRPG.Data
 		Gloves,
 		Boots,
 		Trinket,
+		Boost,
 		N
 	}
 }

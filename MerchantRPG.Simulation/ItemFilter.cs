@@ -13,6 +13,7 @@ namespace MerchantRPG.Simulation
 			return removeRedundantItems(
 				Library.Armorsmith.
 				Concat(Library.Blacksmith).
+				Concat(Library.Boosts).
 				Concat(Library.Clothworker).
 				Concat(Library.Trinkets).
 				Concat(Library.Woodworker).Where(x => x.Level <= maxItemLevel),

@@ -431,6 +431,19 @@ namespace MerchantRPG.Data
 			new Item("Worm Ring", 22, ItemSlot.Trinket, intelligence: 2),
 			new Item("Gnoll Ring", 25, ItemSlot.Trinket, dexterity: 2)
 		};
+		
+		public static Item[] Boosts = {
+			new Item("Atk Boost", 10, ItemSlot.Boost, attack: 5),
+			new Item("Matk Boost", 10, ItemSlot.Boost, magicAttack: 5),
+			new Item("Acc Boost", 10, ItemSlot.Boost, accuracy: 5),
+			new Item("Def Boost", 10, ItemSlot.Boost, defense: 1),
+			new Item("Mdef Boost", 10, ItemSlot.Boost, magicDefense: 5),
+			new Item("Str Boost", 30, ItemSlot.Boost, strength: 2),
+			new Item("Int Boost", 30, ItemSlot.Boost, intelligence: 2),
+			new Item("Dex Boost", 30, ItemSlot.Boost, dexterity: 2),
+			new Item("Def Boost +1", 30, ItemSlot.Boost, defense: 15),
+			new Item("Mdef Boost +1", 30, ItemSlot.Boost, magicDefense: 15),
+		};
 
 		public static Monster[] Monsters = {
 			new Monster("Forest Gathering", 1, 0, 0, 0, 5, 5, 20),
