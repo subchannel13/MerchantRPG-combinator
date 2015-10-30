@@ -59,7 +59,8 @@ namespace MerchantRPG.GeneticParty.Processing
 					if (partyHpLoss[i] >= 1)
 						continue;
 					
-					monsterHp -= partyStats[i].Damage * (1 + partyStats[i].CriticalRate) * partyStats[i].Accuracy / 2;
+					double critRate = Math.Min(1, 1 * partyStats[i].CriticalRate);
+					monsterHp -= partyStats[i].Damage * (1 + critRate) * partyStats[i].Accuracy / 2;
 					
 					if (i < frontRowSeparator)
 						partyHpLoss[i] += (

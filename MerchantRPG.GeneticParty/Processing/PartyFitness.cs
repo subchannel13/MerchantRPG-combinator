@@ -80,6 +80,10 @@ namespace MerchantRPG.GeneticParty.Processing
 					invalidGenes += build.PotionTypes[1] - PotionTypes + 1;
 				if (build.PotionCounts[0] >= MaxPotions)
 					invalidGenes += build.PotionCounts[0] - MaxPotions;
+				
+				/*for(int i = heroI + 1; i < simulator.PartySize; i++)
+					if (build.HeroType == chrom.Value[i * BuildSize])
+						invalidGenes++;*/
 			}
 
 			if (simulator.PartySize > 1)

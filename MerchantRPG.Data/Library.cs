@@ -76,6 +76,9 @@ namespace MerchantRPG.Data
 		public static ItemStereotype SpellswordStereotype = new ItemStereotype(
 							16, 6, 18, 1, 0, 0, 
 							0.75, 0.25, 1, 0, 0);
+		public static ItemStereotype ScytheStereotype = new ItemStereotype(
+							10, 16, 12, 1, 0, 0, 
+							0.75, 1, 0.25, 0, 0);
 		public static ItemStereotype HelmStereotype = new ItemStereotype(
 							0, 0, 0, 0, 8, 4, 
 							0, 0, 0, 0.8, 0.4);
@@ -125,11 +128,13 @@ namespace MerchantRPG.Data
 							0, 0, 0, 0, 2, 6, 
 							0, 0, 0, 0.2, 0.4);
 
-		public static Item[] Blacksmith = new Item[] {
+		public static Item[] Blacksmith = {
+			new Item("Oni's Decapitator", 40, ItemSlot.Weapon, LongswordStereotype, criticalRate: 15, strength: 7, hp: -30),
+			new Item("Leviathan's Bite", 20, ItemSlot.Weapon, DaggerStereotype, magicAttack: 7, strength: 3, dexterity: 3),
 			new Item("King's Blade", 39, ItemSlot.Weapon, LongswordStereotype, magicAttack: 9, accuracy: 9, strength: 6),
-			new Item("Undead Axe", 38, ItemSlot.Weapon, AxeStereotype, strength: 4, hp: -20),
-			new Item("Undead Longsword", 37, ItemSlot.Weapon, LongswordStereotype, strength: 4, hp: -20),
-			new Item("Undead Knife", 36, ItemSlot.Weapon, KnifeStereotype, strength: 4, hp: -20),
+			new Item("Undead Axe", 38, ItemSlot.Weapon, AxeStereotype, strength: 5, hp: -20),
+			new Item("Undead Longsword", 37, ItemSlot.Weapon, LongswordStereotype, strength: 5, hp: -20),
+			new Item("Undead Knife", 36, ItemSlot.Weapon, KnifeStereotype, strength: 5, hp: -20),
 			new Item("Beast Hatchet", 37, ItemSlot.Weapon, HatchetStereotype, dexterity: 3, hp: 25),
 			new Item("Beast Sword", 36, ItemSlot.Weapon, SwordStereotype, dexterity: 3, hp: 25),
 			new Item("Darksteel Axe", 35, ItemSlot.Weapon, AxeStereotype),
@@ -181,15 +186,14 @@ namespace MerchantRPG.Data
 			new Item("Iron Knife", 3, ItemSlot.Weapon, KnifeStereotype),
 			new Item("Iron Hatchet", 3, ItemSlot.Weapon, HatchetStereotype),
 			new Item("Iron Sword", 2, ItemSlot.Weapon, SwordStereotype),
-			new Item("Iron Dagger", 1, ItemSlot.Weapon, DaggerStereotype)
 		};
 
-		public static Item[] Armorsmith = new Item[] {
+		public static Item[] Armorsmith = {
 			new Item("Undead Chainmail", 38, ItemSlot.Chest, ChainmailStereotype, accuracy: -5, strength: 5),
 			new Item("Undead Helm", 37, ItemSlot.Helm, HelmStereotype, accuracy: -4, strength: 4),
 			new Item("Undead Greaves", 36, ItemSlot.Boots, GreavesStereotype, accuracy: -3, strength: 3),
 			new Item("Undead Bracers", 36, ItemSlot.Gloves, BracersStereotype, accuracy: -3, strength: 3),
-			new Item("Scorpion Platemail", 37, ItemSlot.Chest, PlatemailStereotype, magicAttack: 5, strength: 2),
+			new Item("Scorpion Platemail", 37, ItemSlot.Chest, PlatemailStereotype, magicAttack: 7, strength: 4),
 			new Item("Scorpion Great Helm", 36, ItemSlot.Helm, GreatHelmStereotype, magicAttack: 7, strength: 3),
 			new Item("Darksteel Platemail", 36, ItemSlot.Chest, PlatemailStereotype),
 			new Item("Scorpion Sabatons", 35, ItemSlot.Boots, SabatonsStereotype, magicAttack: 5, strength: 2),
@@ -265,14 +269,16 @@ namespace MerchantRPG.Data
 			new Item("Iron Chainmail", 3, ItemSlot.Chest, ChainmailStereotype),
 			new Item("Iron Helm", 2, ItemSlot.Helm, HelmStereotype),
 			new Item("Iron Greaves", 1, ItemSlot.Boots, GreavesStereotype),
-			new Item("Iron Bracers", 1, ItemSlot.Gloves, BracersStereotype)
+			new Item("Iron Bracers", 1, ItemSlot.Gloves, BracersStereotype),
 		};
 		
-		public static Item[] Woodworker = new Item[] {
+		public static Item[] Woodworker = {
+			new Item("Hel's Scythe", 40, ItemSlot.Weapon, ScytheStereotype, attack: 15, criticalRate: 7, intelligence: 5),
+			new Item("Kirin's Wand", 30, ItemSlot.Weapon, WandStereotype, intelligence: 4, dexterity: 4),
 			new Item("Antares' Stinger", 39, ItemSlot.Weapon, WandStereotype, criticalRate: 7, intelligence: 6, hp: 30),
-			new Item("Undead Mystic Stave", 38, ItemSlot.Weapon, MysticStaveStereotype, intelligence: 4, hp: -20),
-			new Item("Undead Cudgel", 37, ItemSlot.Weapon, CudgelStereotype, intelligence: 4, hp: -20),
-			new Item("Undead Mytic Wand", 36, ItemSlot.Weapon, MysticWandStereotype, intelligence: 4, hp: -20),
+			new Item("Undead Mystic Stave", 38, ItemSlot.Weapon, MysticStaveStereotype, intelligence: 5, hp: -20),
+			new Item("Undead Cudgel", 37, ItemSlot.Weapon, CudgelStereotype, intelligence: 5, hp: -20),
+			new Item("Undead Mystic Wand", 36, ItemSlot.Weapon, MysticWandStereotype, intelligence: 5, hp: -20),
 			new Item("Scorpion Cudgel", 37, ItemSlot.Weapon, CudgelStereotype, attack: 7, intelligence: 3),
 			new Item("Scorpion Wand", 36, ItemSlot.Weapon, WandStereotype, attack: 7, intelligence: 3),
 			new Item("Deadwood Mystic Stave", 35, ItemSlot.Weapon, MysticStaveStereotype),
@@ -324,10 +330,15 @@ namespace MerchantRPG.Data
 			new Item("Ashe Mystic Wand", 3, ItemSlot.Weapon, MysticWandStereotype),
 			new Item("Ashe Stave", 3, ItemSlot.Weapon, StaveStereotype),
 			new Item("Ashe Club", 2, ItemSlot.Weapon, ClubStereotype),
-			new Item("Ashe Wand", 1, ItemSlot.Weapon, WandStereotype)
+			new Item("Ashe Wand", 1, ItemSlot.Weapon, WandStereotype),
 		};
 		
-		public static Item[] Clothworker = new Item[] {
+		public static Item[] Clothworker = {
+			new Item("Hel's Robe", 40, ItemSlot.Chest, RobeStereotype, magicDefense: 10, intelligence: 5, hp: 40),
+			new Item("Oni's Mask", 40, ItemSlot.Helm, HoodStereotype, attack: 10, strength: 4, dexterity: 4),
+			new Item("Kirin's Sune-Ate", 30, ItemSlot.Boots, BootsStereotype, strength: 2, intelligence: 4, dexterity: 3),
+			new Item("Kirin's Kote", 30, ItemSlot.Gloves, GlovesStereotype, strength: 4, intelligence: 2, dexterity: 3),
+			new Item("Leviathan's Doublet", 20, ItemSlot.Chest, TunicStereotype, magicDefense: 5, strength: 3, dexterity: 3),
 			new Item("Undead Robe", 39, ItemSlot.Chest, RobeStereotype, accuracy: -5, intelligence: 5),
 			new Item("Undead Hat", 38, ItemSlot.Helm, HatStereotype, accuracy: -4, intelligence: 4),
 			new Item("Undead Crakows", 37, ItemSlot.Boots, CrakowsStereotype, accuracy: -3, intelligence: 3),
@@ -411,7 +422,7 @@ namespace MerchantRPG.Data
 			new Item("Hempen Gloves", 1, ItemSlot.Gloves, GlovesStereotype),
 		};
 
-		public static Item[] Trinkets = new Item[] {
+		public static Item[] Trinkets = {
 			new Item("Arachne's Ring", 3, ItemSlot.Trinket, accuracy: 4),
 			new Item("Grok's Amulet", 5, ItemSlot.Trinket, attack: 4),
 			new Item("Turtle Ring", 12, ItemSlot.Trinket, magicDefense: 6),
@@ -421,7 +432,8 @@ namespace MerchantRPG.Data
 			new Item("Gnoll Ring", 25, ItemSlot.Trinket, dexterity: 2)
 		};
 
-		public static Monster[] Monsters = new Monster[] {
+		public static Monster[] Monsters = {
+			new Monster("Forest Gathering", 1, 0, 0, 0, 5, 5, 20),
 			new Monster("Moss Golem", 2, 15, 5, 5, 10, 5, 40),
 			new Monster("Forest Treant", 2, 5, 15, 5, 5, 10, 40),
 			new Monster("Grass Spider", 3, 5, 20, 10, 5, 10, 50),
@@ -438,6 +450,7 @@ namespace MerchantRPG.Data
 			new Monster("Lord Gronok", 8, 50, 5, 25, 35, 15, 150),
 			new Monster("Maexna", 9, 20, 40, 20, 20, 20, 250, maxPartyMembers: 2),
 			new Monster("Queen Maexna", 9, 20, 55, 25, 20, 25, 280, maxPartyMembers: 2),
+			new Monster("Yarsol Gathering", 10, 0, 0, 0, 10, 10, 70),
 			new Monster("Coral Giant", 11, 30, 5, 15, 20, 20, 150),
 			new Monster("Water Willow", 11, 5, 30, 15, 20, 20, 150),
 			new Monster("Yarsol Snapper", 12, 20, 5, 10, 40, 30, 240),
@@ -454,6 +467,7 @@ namespace MerchantRPG.Data
 			new Monster("Prophet Nami", 17, 10, 80, 45, 25, 30, 250),
 			new Monster("Basamus", 18, 110, 5, 30, 50, 30, 500, maxPartyMembers: 2),
 			new Monster("Basamus Prime", 18, 130, 5, 30, 65, 35, 550, maxPartyMembers: 2),
+			new Monster("Aldur Gathering", 20, 0, 0, 0, 20, 20, 150),
 			new Monster("Highland Titan", 21, 50, 5, 30, 40, 20, 250),
 			new Monster("Aldur Guardian", 21, 5, 50, 30, 30, 30, 250),
 			new Monster("Aldur Ram", 22, 65, 5, 40, 50, 20, 270),
@@ -468,6 +482,7 @@ namespace MerchantRPG.Data
 			new Monster("Drahgar", 26, 180, 10, 80, 100, 50, 1200, maxPartyMembers: 3),
 			new Monster("Ares", 27, 190, 20, 80, 100, 60, 900, maxPartyMembers: 3),
 			new Monster("Ares Prime", 27, 220, 30, 90, 130, 70, 1000, maxPartyMembers: 3),
+			new Monster("Vulkrum Gathering", 30, 0, 0, 0, 25, 25, 200),
 			new Monster("Dark Colossus", 31, 70, 5, 30, 50, 30, 320),
 			new Monster("Haunted Harwood", 31, 5, 70, 30, 40, 40, 320),
 			new Monster("Nightmare Scorpion", 32, 60, 80, 50, 100, 100, 750, maxPartyMembers: 2),
@@ -478,6 +493,10 @@ namespace MerchantRPG.Data
 			new Monster("Undead Mage", 35, 20, 300, 90, 90, 150, 2000, maxPartyMembers: 3),
 			new Monster("Antares", 36, 220, 220, 120, 180, 150, 3500, maxPartyMembers: 5),
 			new Monster("Lich King", 37, 400, 50, 120, 250, 120, 4000, maxPartyMembers: 5),
+			new Monster("Leviathan", 20, 130, 140, 50, 100, 120, 2100, maxPartyMembers: 5),
+			new Monster("Kirin", 30, 380, 140, 90, 260, 140, 2900, maxPartyMembers: 5),
+			new Monster("Oni", 40, 450, 150, 120, 360, 200, 5400, maxPartyMembers: 6),
+			new Monster("Hel", 40, 200, 540, 120, 180, 280, 4200, maxPartyMembers: 6),
 		};
 	}
 }

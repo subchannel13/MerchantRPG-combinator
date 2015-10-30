@@ -10,7 +10,7 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			Optimize("Lich King");
+			Optimize("Oni");
 			
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
