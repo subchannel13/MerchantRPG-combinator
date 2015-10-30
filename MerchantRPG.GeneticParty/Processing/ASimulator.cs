@@ -49,7 +49,9 @@ namespace MerchantRPG.GeneticParty.Processing
 
 		public int ItemChoices(Hero hero, int slot)
 		{
-			return AllItems[hero][slot].Length;
+			return AllItems[hero][slot] == null ? 
+				0 : 
+				AllItems[hero][slot].Length;
 		}
 
 		public Item ItemData(Hero hero, int slot, int index)
@@ -67,7 +69,8 @@ namespace MerchantRPG.GeneticParty.Processing
 			heroStats += enhancmentBonus(build.EnhancmentTypes[1]) * potionStrength * build.EnhancmentCounts[1];
 			
 			for(int i = 0; i < build.Items.Length; i++)
-				heroStats += AllItems[hero][i][build.Items[i]];
+				if (AllItems[hero][i] != null)
+					heroStats += AllItems[hero][i][build.Items[i]];
 			
 			heroStats.Accuracy = Math.Min(1, heroStats.Accuracy + 0.8 / (1 + 2 * monster.Evasion / 100.0));
 			heroStats.CriticalRate = Math.Min(heroStats.CriticalRate, 1);

@@ -73,6 +73,8 @@ namespace MerchantRPG.GeneticParty.Processing
 					for (int i = 0; i < build.Items.Length; i++)
 					{
 						var maxIndex = simulator.ItemChoices(Library.Heroes[build.HeroType], i);
+						if (maxIndex == 0)
+							continue; //skip if there is no item for a slot
 						if (build.Items[i] >= maxIndex)
 							invalidGenes += build.Items[i] - maxIndex + 1;
 					}
@@ -84,7 +86,6 @@ namespace MerchantRPG.GeneticParty.Processing
 				if (build.EnhancmentCounts[0] >= MaxEnhancment)
 					invalidGenes += build.EnhancmentCounts[0] - MaxEnhancment;
 
-				
 				/*for(int i = heroI + 1; i < simulator.PartySize; i++)
 					if (build.HeroType == chrom.Value[i * BuildSize])
 						invalidGenes++;*/
@@ -152,6 +153,8 @@ namespace MerchantRPG.GeneticParty.Processing
 				{
 					if (i > 0)
 						sb.Append(", ");
+					if (simulator.ItemChoices(hero, i) == 0)
+						continue;
 					sb.Append(simulator.ItemData(hero, i, build.Items[i]).Name);
 				}
 				
