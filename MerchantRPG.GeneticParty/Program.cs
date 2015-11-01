@@ -10,8 +10,9 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			Optimize("Oni");
-			
+			//Optimize("Oni");
+			HardestOpponent();
+
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
 		}
@@ -49,6 +50,53 @@ namespace MerchantRPG.GeneticParty
 					
 					population.MutationRate = stagnation > 1000 ? 
 						Math.Min(stagnation / 3000.0, 0.25) : 
+						0.1;
+				}
+			}
+		}
+
+		private static void HardestOpponent()
+		{
+			var challenges = Library.Monsters.ToDictionary(x => x, x => 0.0);
+
+			while (true)
+			{
+				var minScore = challenges.Values.Min();
+				var monster = challenges.First(x => x.Value == minScore).Key;
+
+				var simulator = monster.MaxPartyMembers > 1 ?
+				(ASimulator)new PartySimulator(monster, 40, 40, false) :
+				(ASimulator)new SingleHeroSimulator(monster, 40, 40);
+
+				var fitnessEvaluator = new PartyFitness(simulator);
+				var population = new Population(20,
+					new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue),
+					fitnessEvaluator,
+					new RankSelection());
+				population.RandomSelectionPortion = 0.15;
+
+				double lastFitness = 0;
+				for (int stagnation = 0; stagnation < 10000; stagnation++)
+				{
+					population.RunEpoch();
+					if (population.BestChromosome.Fitness > lastFitness)
+					{
+						lastFitness = population.BestChromosome.Fitness;
+						stagnation = 0;
+
+						if (lastFitness > challenges[monster])
+						{
+							challenges[monster] = lastFitness;
+
+							Console.WriteLine(monster.Name);
+							Console.Write(fitnessEvaluator.Translate(population.BestChromosome).Trim());
+							Console.WriteLine(" " + population.BestChromosome.Fitness);
+							Console.WriteLine();
+						}
+					}
+
+					population.MutationRate = stagnation > 1000 ?
+						Math.Min(stagnation / 3000.0, 0.25) :
 						0.1;
 				}
 			}
