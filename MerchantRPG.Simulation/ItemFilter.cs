@@ -8,15 +8,20 @@ namespace MerchantRPG.Simulation
 {
 	public static class ItemFilter
 	{
+		public static IEnumerable<Item> MakeItems(int maxItemLevel)
+		{
+			return Library.Armorsmith.
+				Concat(Library.Blacksmith).
+				Concat(Library.Clothworker).
+				Concat(Library.Woodworker).Select(x => x.Make(1)).
+				Concat(Library.Boosts).
+				Concat(Library.Trinkets).Where(x => x.Level <= maxItemLevel);
+		}
+
 		public static Dictionary<ItemSlot, Stats[]> RelevantFor(Hero hero, int maxItemLevel, Monster monster, StatsFilter statsMask)
 		{
 			return removeRedundantItems(
-				Library.Armorsmith.
-				Concat(Library.Blacksmith).
-				Concat(Library.Boosts).
-				Concat(Library.Clothworker).
-				Concat(Library.Trinkets).
-				Concat(Library.Woodworker).Where(x => x.Level <= maxItemLevel),
+				MakeItems(maxItemLevel),
 				hero, monster, statsMask);
 		}
 

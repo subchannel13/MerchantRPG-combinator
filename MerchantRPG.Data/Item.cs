@@ -6,6 +6,7 @@ namespace MerchantRPG.Data
 {
 	public class Item
 	{
+		public readonly ItemTemplate Template;
 		public readonly string Name;
 		public readonly int Level;
 		public readonly ItemSlot Slot;
@@ -23,17 +24,18 @@ namespace MerchantRPG.Data
 		public readonly double Dexterity;
 		public readonly double HP;
 
-		public Item(string name, int level, ItemSlot slot, ItemStereotype stereotype, double attack = 0, double magicAttack = 0, double accuracy = 0, double criticalRate = 0, double defense = 0, double magicDefense = 0, double strength = 0, double intelligence = 0, double dexterity = 0, double hp = 0)
+		public Item(ItemTemplate template, double attack = 0, double magicAttack = 0, double accuracy = 0, double criticalRate = 0, double defense = 0, double magicDefense = 0, double strength = 0, double intelligence = 0, double dexterity = 0, double hp = 0)
 		{
-			this.Name = name;
-			this.Level = level;
-			this.Slot = slot;
-			this.Attack = statFunc(stereotype.AttackBase, stereotype.AttackPerLevel) + attack;
-			this.MagicAttack = statFunc(stereotype.MagicAttackBase, stereotype.MagicAttackPerLevel) + magicAttack;
-			this.Accuracy = statFunc(stereotype.AccuracyBase, stereotype.AccuracyPerLevel) + accuracy;
-			this.CriticalRate = stereotype.CriticalRate + criticalRate;
-			this.Defense = statFunc(stereotype.DefenseBase, stereotype.DefensePerLevel) + defense;
-			this.MagicDefense = statFunc(stereotype.MagicDefenseBase, stereotype.MagicDefensePerLevel) + magicDefense;
+			this.Template = template;
+			this.Name = template.Name;
+			this.Level = template.Level;
+			this.Slot = template.Slot;
+			this.Attack = attack;
+			this.MagicAttack = magicAttack;
+			this.Accuracy = accuracy;
+			this.CriticalRate = criticalRate;
+			this.Defense = defense;
+			this.MagicDefense = magicDefense;
 			this.Strength = strength;
 			this.Intelligence = intelligence;
 			this.Dexterity = dexterity;
@@ -42,6 +44,7 @@ namespace MerchantRPG.Data
 		
 		public Item(string name, int level, ItemSlot slot, double attack = 0, double magicAttack = 0, double accuracy = 0, double criticalRate = 0, double defense = 0, double magicDefense = 0, double strength = 0, double intelligence = 0, double dexterity = 0, double hp = 0)
 		{
+			this.Template = null;
 			this.Name = name;
 			this.Level = level;
 			this.Slot = slot;
@@ -66,11 +69,6 @@ namespace MerchantRPG.Data
 				"StatFields", "Name", "Level", "Slot", "HP"
 			};
 			return typeof(Item).GetFields().Where(x => !ignoreFields.Contains(x.Name)).ToArray();
-		}
-		
-		private double statFunc(double baseValue, double perLevelValue)
-		{
-			return Math.Ceiling((baseValue + Level * perLevelValue) * 1.1);
 		}
 	}
 }

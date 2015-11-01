@@ -41,6 +41,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="ItemSlot.cs" />
     <Compile Include="ItemStereotype.cs" />
+    <Compile Include="ItemTemplate.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="Monster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
