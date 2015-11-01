@@ -59,7 +59,7 @@ namespace MerchantRPG.GeneticParty.Processing
 					if (partyHpLoss[i] >= 1)
 						continue;
 					
-					double critRate = Math.Min(1, 1 * partyStats[i].CriticalRate);
+					double critRate = 1 - Math.Pow(1 - partyStats[i].CriticalRate, 4);
 					monsterHp -= partyStats[i].Damage * (1 + critRate) * partyStats[i].Accuracy / 2;
 					
 					if (i < frontRowSeparator)
@@ -80,20 +80,10 @@ namespace MerchantRPG.GeneticParty.Processing
 			return totalHp;
 		}
 
-		private static long depth = 0;
-		private static long maxDepth = 0;
-		
 		private void takeTurn(double[] totalHpLoss, Stats[] partyStats, double[] partyHpLoss, double monsterHp, int frontRowSeparator, int frontRowCount, int currentHero, double stateChance)
-		{
-			if (depth > 1e3)
-				depth = depth;
-			
-			depth++;
-			maxDepth = Math.Max(maxDepth, depth);
-			
+		{	
 			if (partyHpLoss.All(x => x >= 1))
 			{
-				depth--;
 				addHpLoss(totalHpLoss, partyHpLoss, stateChance);
 				return;
 			}
@@ -144,8 +134,6 @@ namespace MerchantRPG.GeneticParty.Processing
 				else
 					addHpLoss(totalHpLoss, partyHpLoss, stateChance * (1 - partyStats[currentHero].CriticalRate));
 			}
-			
-			depth--;
 		}
 		
 		private double[] monsterTurn(IList<Stats> partyStats, Array partyHpLoss, int frontRowCount, int currentHero)
