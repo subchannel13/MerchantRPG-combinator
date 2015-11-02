@@ -10,8 +10,8 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			//Optimize("Oni");
-			HardestOpponent();
+			Optimize("Oni");
+			//HardestOpponent();
 
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
@@ -76,7 +76,9 @@ namespace MerchantRPG.GeneticParty
 				population.RandomSelectionPortion = 0.15;
 
 				double lastFitness = 0;
-				for (int stagnation = 0; stagnation < 10000; stagnation++)
+				int stagnationLimit = minScore < 1e-4 ? 1000 : 10000;
+				
+				for (int stagnation = 0; stagnation < stagnationLimit; stagnation++)
 				{
 					population.RunEpoch();
 					if (population.BestChromosome.Fitness > lastFitness)
