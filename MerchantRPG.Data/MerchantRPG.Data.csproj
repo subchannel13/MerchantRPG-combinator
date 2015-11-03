@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Hero.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="ItemParts.cs" />
     <Compile Include="ItemSlot.cs" />
     <Compile Include="ItemStereotype.cs" />
     <Compile Include="ItemTemplate.cs" />
