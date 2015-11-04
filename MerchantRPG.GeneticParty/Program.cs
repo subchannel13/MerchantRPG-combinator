@@ -10,14 +10,24 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
-			Optimize("Oni");
+			Optimize("Oni",
+			         new string[] {
+						"Warrior: Antares' Stinger, Scorpion Great Helm, Undead Chainmail, Ares' Gloves, Undead Greaves, Lizard Amulet,",
+						"Berserker: Antares' Stinger, Scorpion Great Helm, Undead Chainmail, Undead Bracers, Undead Greaves, Gnoll Ring,",
+						"Paladin: Antares' Stinger, Scorpion Great Helm, Scorpion Platemail, Undead Mitts, Fighters Greaves, Lizard Amulet,",
+						"Cleric: Antares' Stinger, Undead Hat, Undead Robe, Undead Mitts, Scorpion Sabatons, Worm Ring,",
+						"Mage: Antares' Stinger, Undead Hat, Overlord's Robe, Undead Mitts, Undead Crakows, Gnoll Ring,",
+						"Dark Knight: Antares' Stinger, Scorpion Great Helm, Overlord's Robe, Undead Mitts, Undead Crakows, Lizard Amulet,",
+					},
+					3
+			);
 			//HardestOpponent();
 
 			Console.Write("Press any key to continue . . . ");
 			Console.ReadKey(true);
 		}
 		
-		private static void Optimize(string monsterName)
+		private static void Optimize(string monsterName, string[] startingBuild = null, ushort startingBuildFrontRow = 0)
 		{
 			var monster = Library.Monsters.First(x => x.Name == monsterName);
 
@@ -30,13 +40,17 @@ namespace MerchantRPG.GeneticParty
 			while(true)
 			{
 				var fitnessEvaluator = new PartyFitness(simulator);
+				var ancestor = (startingBuild == null) ?
+					new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue) :
+					fitnessEvaluator.TranslateBack(simulator.TranslateBack(startingBuild), startingBuildFrontRow);
+				
 				var population = new Population(20,
-					new ShortArrayChromosome(fitnessEvaluator.ChromosomeLength, fitnessEvaluator.ChromosomeMaxValue), 
+					ancestor, 
 					fitnessEvaluator,
 					new RankSelection());
 				population.RandomSelectionPortion = 0.15;
 					
-				for(int stagnation = 0; stagnation < 10000; stagnation++)
+				for(int stagnation = 0; stagnation < 5000; stagnation++)
 				{
 					population.RunEpoch();
 					if (population.BestChromosome.Fitness > lastFitness)

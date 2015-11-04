@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MerchantRPG.Data;
 using MerchantRPG.Simulation;
 
@@ -57,6 +56,32 @@ namespace MerchantRPG.GeneticParty.Processing
 		public Item ItemData(Hero hero, int slot, int index)
 		{
 			return AllItems[hero][slot][index].OriginalItem;
+		}
+		
+		public IList<HeroBuild> TranslateBack(IList<string> buildTexts)
+		{
+			var builds = new List<HeroBuild>();
+			
+			foreach(var rawText in buildTexts)
+			{
+				var words = rawText.Split(',', ':').Select(x => x.Trim()).ToArray();
+				var hero = Library.Heroes.First(x => x.Name == words[0]);
+				var items = new int[(int)ItemSlot.N];
+				
+				for (int i = 0; i < items.Length; i++)
+					items[i] = (words[i + 1] != "") ?
+						Array.FindIndex(AllItems[hero][i], x => x.OriginalItem.Name == words[i + 1]) : 
+						0;
+				
+				builds.Add(new HeroBuild(
+					Array.FindIndex(Library.Heroes, x => x == hero),
+					items,
+					new int[] {0, 0},
+					new int[] {0, 0}
+				));
+			}
+			
+			return builds;
 		}
 		
 		protected Stats HeroStats(HeroBuild build)

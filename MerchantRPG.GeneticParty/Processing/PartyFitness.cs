@@ -174,6 +174,27 @@ namespace MerchantRPG.GeneticParty.Processing
 			return sb.ToString();
 		}
 		
+		public ShortArrayChromosome TranslateBack(IList<HeroBuild> builds, ushort frontRow)
+		{
+			var chromosome = new ShortArrayChromosome(ChromosomeLength, ChromosomeMaxValue);
+			for(int heroI = 0; heroI < builds.Count; heroI++)
+			{
+				int offset = heroI * BuildSize;
+				var itemCount = builds[heroI].Items.Length;
+				
+				chromosome.Value[offset] = (ushort)builds[heroI].HeroType;
+				Array.Copy(builds[heroI].Items.Select(x => (ushort)x).ToArray(), 0, chromosome.Value, offset + 1, itemCount);
+				chromosome.Value[offset + itemCount + 1] = (ushort)builds[heroI].EnhancmentTypes[0];
+				chromosome.Value[offset + itemCount + 2] = (ushort)builds[heroI].EnhancmentTypes[1];
+				chromosome.Value[offset + itemCount + 3] = (ushort)builds[heroI].EnhancmentCounts[0];
+			}
+			
+			if (simulator.PartySize > 1)
+				chromosome.Value[simulator.PartySize * BuildSize] = frontRow;
+			
+			return chromosome;
+		}
+		
 		private string potionName(int potionType)
 		{
 			if (potionType == 1)
