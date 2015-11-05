@@ -100,6 +100,5 @@ namespace MerchantRPG.Data
 		public static ItemStereotype CrakowsStereotype = new ItemStereotype(
 							0, 0, 0, 0, 2, 6, 
 							0, 0, 0, 0.2, 0.4);
-
 	}
 }
