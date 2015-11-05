@@ -60,7 +60,11 @@ namespace MerchantRPG.Data
 
 		private double statFunc(double baseValue, double perLevelValue, double roll)
 		{
-			return Math.Ceiling((baseValue + Level * perLevelValue) * (0.9 + 0.2 * roll));
+			double average = baseValue + Level * perLevelValue;
+			double min = Math.Floor(average * 0.9);
+			double max = Math.Ceiling(average * 1.1);
+			
+			return min + (max - min) * roll;
 		}
 	}
 }

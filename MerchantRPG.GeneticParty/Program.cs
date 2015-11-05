@@ -10,14 +10,15 @@ namespace MerchantRPG.GeneticParty
 	{
 		public static void Main(string[] args)
 		{
+			Optimize("Serket");
 			Optimize("Oni",
 			         new string[] {
-						"Warrior: Antares' Stinger, Scorpion Great Helm, Undead Chainmail, Ares' Gloves, Undead Greaves, Lizard Amulet,",
-						"Berserker: Antares' Stinger, Scorpion Great Helm, Undead Chainmail, Undead Bracers, Undead Greaves, Gnoll Ring,",
-						"Paladin: Antares' Stinger, Scorpion Great Helm, Scorpion Platemail, Undead Mitts, Fighters Greaves, Lizard Amulet,",
-						"Cleric: Antares' Stinger, Undead Hat, Undead Robe, Undead Mitts, Scorpion Sabatons, Worm Ring,",
-						"Mage: Antares' Stinger, Undead Hat, Overlord's Robe, Undead Mitts, Undead Crakows, Gnoll Ring,",
-						"Dark Knight: Antares' Stinger, Scorpion Great Helm, Overlord's Robe, Undead Mitts, Undead Crakows, Lizard Amulet,",
+						"Berserker: Antares' Stinger, Undead Helm, King's Guard, Arthus' Gauntlets, Serket's Treads, Skeletor's Ring,",
+						"Warrior: Antares' Stinger, Undead Helm, King's Guard, Arthus' Gauntlets, Serket's Treads, Skeletor's Ring,",
+						"Paladin: Antares' Stinger, Undead Hat, King's Guard, Arthus' Gauntlets, Altor's Sandals, Skeletor's Ring,",
+						"Cleric: Antares' Stinger, Undead Hat, Undead Robe, Undead Mitts, Altor's Sandals, Lizard Amulet,",
+						"Mage: Antares' Stinger, Undead Hat, Undead Robe, Undead Mitts, Altor's Sandals, Skeletor's Ring,",
+						"Dark Knight: Antares' Stinger, Undead Hat, Undead Robe, Arthus' Gauntlets, Altor's Sandals, Skeletor's Ring,",
 					},
 					3
 			);
